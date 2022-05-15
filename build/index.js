@@ -2,6 +2,17 @@
 /*************** GENERAL FUNCTIONS *****************/
 /* Functions not specific to Utdannet.nos solution */
 /***************************************************/
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
 var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
     var desc = Object.getOwnPropertyDescriptor(m, k);
@@ -72,7 +83,7 @@ var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getMonth = exports.getSlug = exports.urlToArray = exports.noWrappingSlash = exports.noPreSlash = exports.noTrailingSlash = exports.isArray = exports.prependSlash = exports.isWebAdresse = exports.appendPagination = exports.safeString = exports.safeArray = exports.setHash = exports.openWindow = exports.constructParamsString = exports.stringify = exports.tryCatch = exports.formatNumber = exports.handleEvent = exports.serializeForm = exports.isObject = exports.stringToObject = exports.trimObject = exports.getTimeoutObject = exports.noError = exports.sortFromArray = exports.setTime = exports.paginateArray = exports.isValid = exports.prependUrl = exports.sleep = exports.removeEmpty = exports.isEmpty = exports.parseQuery = exports.makePdf = exports.formatDate = exports.genUid = exports.isError = exports.getTimeSince = exports.stringCheck = exports.sortObjectArray = exports.resizeImage = exports.toMinutes = exports.toHours = exports.addZero = exports.capitalize = exports.stringifyLink = exports.ansiToIso = exports.isoToAnsi = exports.compareArray = void 0;
-exports.objToUrlParams = exports.removeDuplicateArrayObjects = exports.hasChanges = exports.split = exports.forEach = exports.find = exports.filter = exports.map = void 0;
+exports.jsonParse = exports.propClass = exports.addOrReplace = exports.makePathArray = exports.updateArray = exports.removeUrlParams = exports.removeExcessiveNewLines = exports.shallowEqualObject = exports.offsetArray = exports.objToUrlParams = exports.removeDuplicateArrayObjects = exports.hasChanges = exports.split = exports.forEach = exports.find = exports.filter = exports.map = void 0;
 /***** IMPORTS *****/
 var htmlToImage = __importStar(require("html-to-image"));
 /*** GLOBAL VARIABLES ***/
@@ -1130,3 +1141,181 @@ var objToUrlParams = function (queryObject) {
     return queryString;
 };
 exports.objToUrlParams = objToUrlParams;
+/**
+ * Function for shifting items in an array forward or backwards
+ * @param {any[]} arr An array of anything
+ * @param {number} offset Number of items to offset array with
+ * @returns {any[]} Returns an array with exactly as many items in it.
+ */
+var offsetArray = function (arr, offset) {
+    var newArray = [];
+    var arrLength = arr.length;
+    forEach(arr, function (item, index) {
+        if (index === void 0) { index = 0; }
+        var newIndex = index + offset;
+        if (newIndex < 0)
+            newIndex = arrLength + newIndex;
+        if (newIndex > arrLength)
+            newIndex = newIndex - arrLength;
+        newArray[newIndex] = item;
+    });
+    return newArray.slice(1);
+};
+exports.offsetArray = offsetArray;
+/**
+ * Function for checking objects are the equal.
+ * @param {genObject} object1 First object to be compared
+ * @param {genObject} object2 Second object to be compared
+ * @returns {boolean} true if object is the same, false is there is a difference.
+ */
+var shallowEqualObject = function (object1, object2) {
+    var keys1 = Object.keys(object1);
+    var keys2 = Object.keys(object2);
+    // Check if same length 
+    if (keys1.length !== keys2.length) {
+        return false;
+    }
+    // Check if objects has same values
+    for (var _i = 0, keys1_1 = keys1; _i < keys1_1.length; _i++) {
+        var key = keys1_1[_i];
+        if (object1[key] !== object2[key]) {
+            return false;
+        }
+    }
+    return true;
+};
+exports.shallowEqualObject = shallowEqualObject;
+/**
+ * Removes to many new-lines in a string.
+ * @param {string} text Text to be escaped
+ * @returns {string} Escaped string.
+ */
+var removeExcessiveNewLines = function (text) {
+    var newText = safeString(text).replace(/[\n|\r]{5,}/gm, '\n\n');
+    return newText;
+};
+exports.removeExcessiveNewLines = removeExcessiveNewLines;
+/**
+ * Remove url-params from an url-string
+ * @param {string} url
+ * @returns {string}
+ */
+var removeUrlParams = function (url) {
+    var urlArray = safeString(url).split('?');
+    return noTrailingSlash(urlArray[0]);
+};
+exports.removeUrlParams = removeUrlParams;
+/**
+ * Replaces an item in a array based on a query.
+ * @param {any[]} array An array with any content
+ * @param {any} updatedItem Item to insert where matching items is found
+ * @param {genObject | any} query Query to find items.
+ * 	This can be an object, where defined keys will be matched, or any other values that will be checked for equality.
+ * @returns {any[]} Returns array with replaced item.
+ */
+function updateArray(array, updatedItem, query, keepOldData) {
+    if (keepOldData === void 0) { keepOldData = false; }
+    if ((0, exports.isObject)(query)) {
+        var keys_1 = Object.keys(query);
+        var updatedArray_1 = map(array, function (item) {
+            if (!(0, exports.isObject)(item))
+                return item;
+            var isMatch = true;
+            forEach(keys_1, function (key) {
+                if (item[key] !== query[key])
+                    isMatch = false;
+            });
+            return !isMatch
+                ? item
+                : keepOldData
+                    ? __assign(__assign({}, item), updatedItem) : updatedItem;
+        });
+        return updatedArray_1;
+    }
+    var updatedArray = map(array, function (item) {
+        if (!item || !query)
+            return item;
+        if (item === query)
+            return updatedItem;
+    });
+    return updatedArray;
+}
+exports.updateArray = updateArray;
+/**
+ * Takes a url-path and splits it into an array of slugs
+ * @param path url-string to process.
+ * @returns String array of slugs
+ */
+var makePathArray = function (path) {
+    var safePath = safeString(path);
+    var noSlashUrl = noWrappingSlash(safePath);
+    var pathArray = split(noSlashUrl, '/');
+    var cleanPathArray = (0, exports.removeEmpty)(pathArray);
+    return cleanPathArray;
+};
+exports.makePathArray = makePathArray;
+/**
+ * Adds item to array, or replaces/updates it if it has a key-value that matches key-value on target array.
+ * @param data Data to add to array
+ * @param targetArray Array to add data to.
+ * @param key What key to check value of.
+ * 	-If undefined a shallow compare of the items are done instead,
+ * 		and items are always overwritten.
+ * @param replace If true, replaces matched items instead of updating them.
+ * @returns Updated array
+ */
+function addOrReplace(data, targetArray, key, replace) {
+    if (replace === void 0) { replace = false; }
+    var sameArray = [];
+    var findSameItem = function (newData, oldItem, key) {
+        return find(newData, function (dataItem) {
+            var dataItemValue = key ? dataItem[key] : dataItem;
+            //Adding uid to value if undefined, to not get true if both values is undefined.
+            var itemValue = (key ? oldItem[key] : oldItem) || (0, exports.genUid)(16);
+            return dataItemValue === itemValue;
+        });
+    };
+    //Update/replace items that exist in target-array
+    forEach(targetArray, function (item) {
+        if (!Array.isArray(data))
+            data = [data];
+        var sameItem = findSameItem(data, item, key);
+        if (sameItem)
+            sameArray.push(replace ? sameItem : __assign(__assign({}, item), sameItem));
+        else
+            sameArray.push(item);
+    });
+    //Add new items to result.
+    if (!Array.isArray(data))
+        data = [data];
+    var newItems = filter(data, function (dataItem) {
+        var sameItem = findSameItem(sameArray, dataItem, key);
+        return !sameItem;
+    });
+    return __spreadArray(__spreadArray([], sameArray, true), newItems, true);
+}
+exports.addOrReplace = addOrReplace;
+/**
+ * Adds passed prop-class to native component-class. If non exists, empty string is returned instead
+ * @param nativeClass
+ * @param propClass
+ * @returns
+ */
+var propClass = function (nativeClass, propClass) {
+    if (nativeClass === void 0) { nativeClass = ''; }
+    if (propClass === void 0) { propClass = ''; }
+    return "".concat(nativeClass).concat(nativeClass ? ' ' + propClass : propClass);
+};
+exports.propClass = propClass;
+/**
+ * Function for parsing json, but avoiding crashes.
+ * @param {string} data Data to parse (should be a string)
+ * @returns {object | any} Object from parsed json, or same data as was passed.
+ */
+var jsonParse = function (data) {
+    var result = (0, exports.tryCatch)(function () { return JSON.parse(data); });
+    if ((0, exports.isError)(result))
+        return data;
+    return result;
+};
+exports.jsonParse = jsonParse;

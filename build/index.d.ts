@@ -1,6 +1,6 @@
 /*************** GENERAL FUNCTIONS *****************/
 /***************************************************/
-import { genObject } from './types';
+import { genObject, IIndexableString } from './types';
 /***** FUNCTIONS *****/
 /**
  * Function for comparing values in two arrays and returning duplicate values.
@@ -373,4 +373,69 @@ export declare const removeDuplicateArrayObjects: (array: any[], key: string) =>
  * @returns {string}
  */
 export declare const objToUrlParams: (queryObject: genObject) => string;
+/**
+ * Function for shifting items in an array forward or backwards
+ * @param {any[]} arr An array of anything
+ * @param {number} offset Number of items to offset array with
+ * @returns {any[]} Returns an array with exactly as many items in it.
+ */
+export declare const offsetArray: (arr: any, offset: number) => any;
+/**
+ * Function for checking objects are the equal.
+ * @param {genObject} object1 First object to be compared
+ * @param {genObject} object2 Second object to be compared
+ * @returns {boolean} true if object is the same, false is there is a difference.
+ */
+export declare const shallowEqualObject: (object1: genObject, object2: genObject) => boolean;
+/**
+ * Removes to many new-lines in a string.
+ * @param {string} text Text to be escaped
+ * @returns {string} Escaped string.
+ */
+export declare const removeExcessiveNewLines: (text: string) => string;
+/**
+ * Remove url-params from an url-string
+ * @param {string} url
+ * @returns {string}
+ */
+export declare const removeUrlParams: (url: string) => any;
+/**
+ * Replaces an item in a array based on a query.
+ * @param {any[]} array An array with any content
+ * @param {any} updatedItem Item to insert where matching items is found
+ * @param {genObject | any} query Query to find items.
+ * 	This can be an object, where defined keys will be matched, or any other values that will be checked for equality.
+ * @returns {any[]} Returns array with replaced item.
+ */
+export declare function updateArray<T>(array: T[], updatedItem: T, query: genObject | any, keepOldData?: boolean): any[];
+/**
+ * Takes a url-path and splits it into an array of slugs
+ * @param path url-string to process.
+ * @returns String array of slugs
+ */
+export declare const makePathArray: (path: string) => any;
+/**
+ * Adds item to array, or replaces/updates it if it has a key-value that matches key-value on target array.
+ * @param data Data to add to array
+ * @param targetArray Array to add data to.
+ * @param key What key to check value of.
+ * 	-If undefined a shallow compare of the items are done instead,
+ * 		and items are always overwritten.
+ * @param replace If true, replaces matched items instead of updating them.
+ * @returns Updated array
+ */
+export declare function addOrReplace<T extends IIndexableString>(data: T | T[], targetArray: T[], key?: string, replace?: boolean): any[];
+/**
+ * Adds passed prop-class to native component-class. If non exists, empty string is returned instead
+ * @param nativeClass
+ * @param propClass
+ * @returns
+ */
+export declare const propClass: (nativeClass?: string, propClass?: string) => string;
+/**
+ * Function for parsing json, but avoiding crashes.
+ * @param {string} data Data to parse (should be a string)
+ * @returns {object | any} Object from parsed json, or same data as was passed.
+ */
+export declare const jsonParse: (data: any) => any;
 export {};

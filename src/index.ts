@@ -4,7 +4,7 @@
 
 /***** IMPORTS *****/
 import * as htmlToImage from 'html-to-image';
-import {genObject} from './types';
+import {genObject, IIndexableString} from './types';
 
 /*** GLOBAL VARIABLES ***/
 const safeWindow = typeof window === 'undefined' ? {} as Window : window;
@@ -1114,3 +1114,190 @@ export const objToUrlParams = (queryObject: genObject) => {
 
     return queryString;
 };
+
+
+
+/**
+ * Function for shifting items in an array forward or backwards
+ * @param {any[]} arr An array of anything
+ * @param {number} offset Number of items to offset array with
+ * @returns {any[]} Returns an array with exactly as many items in it.
+ */
+ export const offsetArray = (arr: any, offset: number) => {
+	const newArray: any = [];
+	const arrLength = arr.length;
+
+	forEach(arr, (item, index = 0) => {
+		let newIndex = index + offset;
+		if(newIndex < 0) newIndex = arrLength + newIndex;
+		if(newIndex > arrLength) newIndex = newIndex - arrLength;
+		newArray[newIndex] = item;
+	});
+
+	return newArray.slice(1);
+};
+
+/**
+ * Function for checking objects are the equal.
+ * @param {genObject} object1 First object to be compared
+ * @param {genObject} object2 Second object to be compared
+ * @returns {boolean} true if object is the same, false is there is a difference.
+ */
+export const shallowEqualObject = (object1: genObject, object2: genObject) => {
+	const keys1  = Object.keys(object1);
+	const keys2  = Object.keys(object2);
+	// Check if same length 
+	if(keys1.length !== keys2.length) {
+		return false;
+	}
+	// Check if objects has same values
+	for(const key of keys1) {
+		if(object1[key] !== object2[key]) {
+
+			return false;
+		}
+	}
+	return true;
+};
+
+
+/**
+ * Removes to many new-lines in a string.
+ * @param {string} text Text to be escaped
+ * @returns {string} Escaped string.
+ */
+export const removeExcessiveNewLines = (text: string) => {
+	const newText = safeString(text).replace(/[\n|\r]{5,}/gm, '\n\n');
+	return newText;
+};
+
+
+/**
+ * Remove url-params from an url-string
+ * @param {string} url 
+ * @returns {string}
+ */
+export const removeUrlParams = (url: string) => {
+	const urlArray = safeString(url).split('?');
+	return noTrailingSlash(urlArray[0]);
+};
+
+
+/**
+ * Replaces an item in a array based on a query.
+ * @param {any[]} array An array with any content 
+ * @param {any} updatedItem Item to insert where matching items is found
+ * @param {genObject | any} query Query to find items. 
+ * 	This can be an object, where defined keys will be matched, or any other values that will be checked for equality.
+ * @returns {any[]} Returns array with replaced item.
+ */
+export function updateArray<T> (array: T[], updatedItem: T, query: genObject | any, keepOldData = false) {
+	if(isObject(query)) {
+		const keys = Object.keys(query);
+
+		const updatedArray = map(array, (item: any) => {
+			if(!isObject(item)) return item;
+
+			let isMatch = true;
+			forEach(keys, (key) => {
+				if(item[key] !== query[key]) isMatch = false; 
+			});
+
+			return !isMatch 
+				? item
+				: keepOldData
+					? {...item, ...updatedItem}
+					: updatedItem;
+				
+		});
+
+		return updatedArray;
+	}
+
+	const updatedArray = map(array, (item) => {
+		if(!item || !query) return item;
+		if(item === query) return updatedItem;
+	});
+
+	return updatedArray;
+}
+
+
+/**
+ * Takes a url-path and splits it into an array of slugs
+ * @param path url-string to process.
+ * @returns String array of slugs
+ */
+export const makePathArray = (path: string) => {
+	const safePath = safeString(path);
+	const noSlashUrl = noWrappingSlash(safePath);
+	const pathArray = split(noSlashUrl, '/');
+	const cleanPathArray = removeEmpty(pathArray);
+	return cleanPathArray;
+};
+
+
+/**
+ * Adds item to array, or replaces/updates it if it has a key-value that matches key-value on target array.
+ * @param data Data to add to array
+ * @param targetArray Array to add data to.
+ * @param key What key to check value of. 
+ * 	-If undefined a shallow compare of the items are done instead, 
+ * 		and items are always overwritten.
+ * @param replace If true, replaces matched items instead of updating them.
+ * @returns Updated array
+ */
+export function addOrReplace<T extends IIndexableString>(data: T | T[], targetArray: T[], key?: string, replace = false) {
+	const sameArray = [] as T[];
+
+	const findSameItem = (newData: T[], oldItem: T, key?: string) => {
+		return find(newData, (dataItem) => {
+			const dataItemValue = key ? dataItem[key] : dataItem;
+			//Adding uid to value if undefined, to not get true if both values is undefined.
+			const itemValue = (key ? oldItem[key] : oldItem) || genUid(16);
+			return dataItemValue === itemValue;
+		});
+	};
+
+	//Update/replace items that exist in target-array
+	forEach(targetArray, (item) => {
+		if(!Array.isArray(data)) data = [data];
+		const sameItem = findSameItem(data, item, key);
+		if(sameItem) sameArray.push(replace ? sameItem : {...item, ...sameItem});
+		else sameArray.push(item);
+	});
+
+	//Add new items to result.
+	if(!Array.isArray(data)) data = [data];
+	const newItems = filter(data, (dataItem) => {
+		const sameItem = findSameItem(sameArray, dataItem, key);
+		return !sameItem;
+	});
+
+	return [...sameArray, ...newItems];
+}
+
+
+/**
+ * Adds passed prop-class to native component-class. If non exists, empty string is returned instead
+ * @param nativeClass 
+ * @param propClass 
+ * @returns 
+ */
+export const propClass = (nativeClass = '', propClass = '') => {
+	return `${nativeClass}${nativeClass ? ' ' + propClass : propClass}`;
+};
+
+
+/**
+ * Function for parsing json, but avoiding crashes.
+ * @param {string} data Data to parse (should be a string)
+ * @returns {object | any} Object from parsed json, or same data as was passed.
+ */
+export const jsonParse = (data: any) => {
+	const result = tryCatch(() => JSON.parse(data));
+	if(isError(result)) return data;
+	return result;
+};
+
+

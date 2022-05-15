@@ -54,3 +54,6 @@ export interface IDangerousHtml {
 }
 export declare type FToggle = (toggle: boolean) => void;
 export declare type FEmpty = () => void;
+export interface IIndexableString {
+    [key: string]: any;
+}

@@ -71,3 +71,6 @@ export type FEmpty = () => void;
 //     (value: T): Dispatch<SetStateAction<T>> | void
 // }
 
+export interface IIndexableString {
+	[key: string]: any; //eslint-disable-line @typescript-eslint/no-explicit-any
+}
