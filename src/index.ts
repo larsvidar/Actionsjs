@@ -7,11 +7,21 @@ import * as htmlToImage from 'html-to-image';
 import {genObject, IIndexableString} from './types';
 
 /*** GLOBAL VARIABLES ***/
-const safeWindow = typeof window === 'undefined' ? {} as Window : window;
-const location = window?.location || {} as Location;
+
 
 
 /***** FUNCTIONS *****/
+
+/**
+ * Return safe version of the window-object, also if app runs on server.
+ * @returns Window or empty object.
+ */
+ export const safeWindow = (): any => {
+	const windowObject = typeof window === 'undefined' ? {} as Window : window;
+	windowObject.location = windowObject.location || {} as Location;
+
+	return windowObject;
+};
 
 /**
  * Function for comparing values in two arrays and returning duplicate values.
@@ -819,12 +829,13 @@ export const constructParamsString = (params: genObject) => {
  * @return {Window} A window-object
  */
 export const openWindow = (url: string, width = 480, height= 640, top: number, left: number) => {
+
     //Variables
-    if(!top) top = (window?.screen.height / 3) - (height / 2);
-    if(!left) left = (window?.screen.width / 2) - (width / 2);
+    if(!top) top = (safeWindow()?.screen.height / 3) - (height / 2);
+    if(!left) left = (safeWindow()?.screen.width / 2) - (width / 2);
 
     //Open new window
-    const newWindow = window?.open(
+    const newWindow = safeWindow()?.open(
         url, 
         '_blank', 
         `top=${top},left=${left},width=${width},height=${height}`

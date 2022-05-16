@@ -1,7 +1,13 @@
 /*************** GENERAL FUNCTIONS *****************/
 /***************************************************/
 import { genObject, IIndexableString } from './types';
+/*** GLOBAL VARIABLES ***/
 /***** FUNCTIONS *****/
+/**
+ * Return safe version of the window-object, also if app runs on server.
+ * @returns Window or empty object.
+ */
+export declare const safeWindow: () => any;
 /**
  * Function for comparing values in two arrays and returning duplicate values.
  * @param {Array<any>} arr1 - First array to be compared.
@@ -56,10 +62,7 @@ export declare const toMinutes: (seconds: number, loc?: genObject | undefined) =
  * @param {any} file from formData to be reduced.
  * @return {{file: genObject, messages: string[]}} Object with file-object and messages.
  */
-export declare const resizeImage: (file: any, options: genObject) => Promise<{
-    file?: genObject | undefined;
-    messages: string[];
-}>;
+export declare const resizeImage: (file: File, options: genObject) => Promise<genObject>;
 /**
  * Sorts an array of object based on values in passed key.
  * @param {Array<genObject>} array - Array of objects to be sorted.
@@ -243,7 +246,7 @@ export declare const constructParamsString: (params: genObject) => string;
  * @param {number} left Number of pixels the window should be placed from the left edge of the screen
  * @return {Window} A window-object
  */
-export declare const openWindow: (url: string, width: number | undefined, height: number | undefined, top: number, left: number) => Window | Error;
+export declare const openWindow: (url: string, width: number | undefined, height: number | undefined, top: number, left: number) => any;
 /**
  * Function for setting and triggering location-hash;
  * @param {string} hash to be set (string without #);

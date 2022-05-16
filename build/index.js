@@ -82,14 +82,22 @@ var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
     return to.concat(ar || Array.prototype.slice.call(from));
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getMonth = exports.getSlug = exports.urlToArray = exports.noWrappingSlash = exports.noPreSlash = exports.noTrailingSlash = exports.isArray = exports.prependSlash = exports.isWebAdresse = exports.appendPagination = exports.safeString = exports.safeArray = exports.setHash = exports.openWindow = exports.constructParamsString = exports.stringify = exports.tryCatch = exports.formatNumber = exports.handleEvent = exports.serializeForm = exports.isObject = exports.stringToObject = exports.trimObject = exports.getTimeoutObject = exports.noError = exports.sortFromArray = exports.setTime = exports.paginateArray = exports.isValid = exports.prependUrl = exports.sleep = exports.removeEmpty = exports.isEmpty = exports.parseQuery = exports.makePdf = exports.formatDate = exports.genUid = exports.isError = exports.getTimeSince = exports.stringCheck = exports.sortObjectArray = exports.resizeImage = exports.toMinutes = exports.toHours = exports.addZero = exports.capitalize = exports.stringifyLink = exports.ansiToIso = exports.isoToAnsi = exports.compareArray = void 0;
-exports.jsonParse = exports.propClass = exports.addOrReplace = exports.makePathArray = exports.updateArray = exports.removeUrlParams = exports.removeExcessiveNewLines = exports.shallowEqualObject = exports.offsetArray = exports.objToUrlParams = exports.removeDuplicateArrayObjects = exports.hasChanges = exports.split = exports.forEach = exports.find = exports.filter = exports.map = void 0;
+exports.getSlug = exports.urlToArray = exports.noWrappingSlash = exports.noPreSlash = exports.noTrailingSlash = exports.isArray = exports.prependSlash = exports.isWebAdresse = exports.appendPagination = exports.safeString = exports.safeArray = exports.setHash = exports.openWindow = exports.constructParamsString = exports.stringify = exports.tryCatch = exports.formatNumber = exports.handleEvent = exports.serializeForm = exports.isObject = exports.stringToObject = exports.trimObject = exports.getTimeoutObject = exports.noError = exports.sortFromArray = exports.setTime = exports.paginateArray = exports.isValid = exports.prependUrl = exports.sleep = exports.removeEmpty = exports.isEmpty = exports.parseQuery = exports.makePdf = exports.formatDate = exports.genUid = exports.isError = exports.getTimeSince = exports.stringCheck = exports.sortObjectArray = exports.resizeImage = exports.toMinutes = exports.toHours = exports.addZero = exports.capitalize = exports.stringifyLink = exports.ansiToIso = exports.isoToAnsi = exports.compareArray = exports.safeWindow = void 0;
+exports.jsonParse = exports.propClass = exports.addOrReplace = exports.makePathArray = exports.updateArray = exports.removeUrlParams = exports.removeExcessiveNewLines = exports.shallowEqualObject = exports.offsetArray = exports.objToUrlParams = exports.removeDuplicateArrayObjects = exports.hasChanges = exports.split = exports.forEach = exports.find = exports.filter = exports.map = exports.getMonth = void 0;
 /***** IMPORTS *****/
 var htmlToImage = __importStar(require("html-to-image"));
 /*** GLOBAL VARIABLES ***/
-var safeWindow = typeof window === 'undefined' ? {} : window;
-var location = (window === null || window === void 0 ? void 0 : window.location) || {};
 /***** FUNCTIONS *****/
+/**
+ * Return safe version of the window-object, also if app runs on server.
+ * @returns Window or empty object.
+ */
+var safeWindow = function () {
+    var windowObject = typeof window === 'undefined' ? {} : window;
+    windowObject.location = windowObject.location || {};
+    return windowObject;
+};
+exports.safeWindow = safeWindow;
 /**
  * Function for comparing values in two arrays and returning duplicate values.
  * @param {Array<any>} arr1 - First array to be compared.
@@ -244,7 +252,7 @@ var resizeImage = function (file, options) { return __awaiter(void 0, void 0, vo
         image = new Image();
         image.src = URL.createObjectURL(file); //Setting passed file as image-source.
         canvas = document.createElement('canvas');
-        ctx = canvas.getContext('2d');
+        ctx = canvas.getContext('2d') || {};
         //Returning a promise that resolves to the new form-data (with the resized image).
         return [2 /*return*/, new Promise(function (resolve) {
                 //Listener for when source is loaded into image.
@@ -264,26 +272,23 @@ var resizeImage = function (file, options) { return __awaiter(void 0, void 0, vo
                     //Making new form-data.
                     var formData = new FormData();
                     //Getting the image from the canvas, and appending it to form-data.
-                    if (options.blob) {
-                        canvas.toBlob(function (blob) { return __awaiter(void 0, void 0, void 0, function () {
-                            var file;
-                            return __generator(this, function (_a) {
-                                file = new File([blob], fileName + '.png', { type: 'image/png' });
-                                resolve({ file: file, messages: messages });
+                    canvas.toBlob(function (blob) { return __awaiter(void 0, void 0, void 0, function () {
+                        var file_1;
+                        return __generator(this, function (_a) {
+                            if (!blob)
                                 return [2 /*return*/];
-                            });
-                        }); });
-                    }
-                    else {
-                        canvas.toBlob(function (blob) { return __awaiter(void 0, void 0, void 0, function () {
-                            return __generator(this, function (_a) {
+                            if (options.blob) {
+                                file_1 = new File([blob], fileName + '.png', { type: 'image/png' });
+                                resolve({ file: file_1, messages: messages });
+                            }
+                            else {
                                 formData.append('files', blob, fileName + '.png');
                                 //Resolve when new formData is finished.
                                 resolve({ file: formData, messages: messages });
-                                return [2 /*return*/];
-                            });
-                        }); });
-                    }
+                            }
+                            return [2 /*return*/];
+                        });
+                    }); });
                 };
             })];
     });
@@ -864,15 +869,16 @@ exports.constructParamsString = constructParamsString;
  * @return {Window} A window-object
  */
 var openWindow = function (url, width, height, top, left) {
+    var _a, _b, _c;
     if (width === void 0) { width = 480; }
     if (height === void 0) { height = 640; }
     //Variables
     if (!top)
-        top = ((window === null || window === void 0 ? void 0 : window.screen.height) / 3) - (height / 2);
+        top = (((_a = (0, exports.safeWindow)()) === null || _a === void 0 ? void 0 : _a.screen.height) / 3) - (height / 2);
     if (!left)
-        left = ((window === null || window === void 0 ? void 0 : window.screen.width) / 2) - (width / 2);
+        left = (((_b = (0, exports.safeWindow)()) === null || _b === void 0 ? void 0 : _b.screen.width) / 2) - (width / 2);
     //Open new window
-    var newWindow = window === null || window === void 0 ? void 0 : window.open(url, '_blank', "top=".concat(top, ",left=").concat(left, ",width=").concat(width, ",height=").concat(height));
+    var newWindow = (_c = (0, exports.safeWindow)()) === null || _c === void 0 ? void 0 : _c.open(url, '_blank', "top=".concat(top, ",left=").concat(left, ",width=").concat(width, ",height=").concat(height));
     if (!newWindow) {
         return Error('Kunne ikke åpne vindu for bank-ID. Tillat popups fra siden');
     }
