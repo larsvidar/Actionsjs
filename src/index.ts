@@ -155,63 +155,63 @@ export const toMinutes = (seconds: number, loc?: genObject): string => {
  * @param {any} file from formData to be reduced.
  * @return {{file: genObject, messages: string[]}} Object with file-object and messages.
  */
-export const resizeImage = async (file: any, options: genObject): Promise<{file?: genObject, messages: string[]}> => {
-    const messages: string[] = [];
-    if(!(file?.type || '').match(/image\//gi)) {
-        messages.push('Invalid file type');
-        return {messages};
-    }
+ export const resizeImage = async (file: File, options: genObject) => {
+	const messages: string[] = [];
+	if(!(file?.type || '').match(/image\//gi)) {
+		messages.push('Invalid file type');
+		return {messages};
+	}
 
-    //Function for calculating new size of image.
-    const getNewSize = (width: number, height: number, size: number) => {
-        return width >= height
-            ? [size, height / (width / size)]
-            : [width / (height / size), size];
-    };
+	//Function for calculating new size of image.
+	const getNewSize = (width: number, height: number, size: number) => {
+		return width >= height
+			? [size, height / (width / size)]
+			: [width / (height / size), size];
+	};
 
-    /* Variables */
-    const fileName = safeString(file.name).split('.')[0]; //get filename from file (except filetype).
-    const image = new Image(); //Make new image.
-    image.src = URL.createObjectURL(file); //Setting passed file as image-source.
-    const canvas = document.createElement('canvas'); //Make new canvas-element.
-    const ctx: any = canvas.getContext('2d'); //Get context from canvas.
+	/* Variables */
+	const fileName = safeString(file.name).split('.')[0]; //get filename from file (except filetype).
+	const image = new Image(); //Make new image.
+	image.src = URL.createObjectURL(file); //Setting passed file as image-source.
+	const canvas = document.createElement('canvas'); //Make new canvas-element.
+	const ctx = canvas.getContext('2d') || {} as CanvasRenderingContext2D; //Get context from canvas.
 
-    //Returning a promise that resolves to the new form-data (with the resized image).
-    return new Promise((resolve) => {
-        //Listener for when source is loaded into image.
-        image.onload = () => {
-            //Checking if image is bigger than set size.
-            const longestSide = Math.max(image.width, image.height);
-            const newLongSize = longestSide < options.size ? longestSide : options.size;
-            if(longestSide < options.size) messages.push('Bildet er for stort. Reduserer størrelsen');
-            //Getting the new size of the image.
-            const newSize = getNewSize(image.width, image.height, newLongSize);
-            //Setting the canvas to the new image size. 
-            canvas.width = newSize[0];
-            canvas.height = newSize[1];
-            //Drawing the image on the canvas with the new size.
-            ctx.drawImage(image, 0, 0, newSize[0], newSize[1]);
 
-            //Making new form-data.
-            const formData: any = new FormData();
+	//Returning a promise that resolves to the new form-data (with the resized image).
+	return new Promise((resolve) => {
+		//Listener for when source is loaded into image.
+		image.onload = () => {
+			//Checking if image is bigger than set size.
+			const longestSide = Math.max(image.width, image.height);
+			const newLongSize = longestSide < options.size ? longestSide : options.size;
+			if(longestSide < options.size) messages.push('Bildet er for stort. Reduserer størrelsen');
+			//Getting the new size of the image.
+			const newSize = getNewSize(image.width, image.height, newLongSize);
+			//Setting the canvas to the new image size. 
+			canvas.width = newSize[0];
+			canvas.height = newSize[1];
+			//Drawing the image on the canvas with the new size.
+			ctx.drawImage(image, 0, 0, newSize[0], newSize[1]);
 
-            //Getting the image from the canvas, and appending it to form-data.
-            if(options.blob) {
-                canvas.toBlob(async (blob: any) => {
-                    //formData.append('files', blob, fileName + '.png');
-                    //Resolve when new formData is finished.
-                    const file = new File([blob], fileName + '.png', { type: 'image/png' });
-                    resolve({file, messages});
-                });
-            } else {
-                canvas.toBlob(async (blob: any) => {
-                    formData.append('files', blob, fileName + '.png');
-                    //Resolve when new formData is finished.
-                    resolve({file: formData, messages});
-                });
-            }
-        };
-    });
+			//Making new form-data.
+			const formData = new FormData();
+
+			//Getting the image from the canvas, and appending it to form-data.
+			canvas.toBlob(async (blob) => {
+				if(!blob) return;
+				if(options.blob) {
+					//formData.append('files', blob, fileName + '.png');
+					//Resolve when new formData is finished.
+					const file = new File([blob], fileName + '.png', {type: 'image/png'});
+					resolve({file, messages});
+				} else {
+					formData.append('files', blob, fileName + '.png');
+					//Resolve when new formData is finished.
+					resolve({file: formData, messages});
+				}
+			});
+		};
+	}) as Promise<genObject>;
 };
 
 
