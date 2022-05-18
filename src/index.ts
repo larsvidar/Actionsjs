@@ -93,17 +93,14 @@ export const stringifyLink = (link: string): string => {
 
 /**
  * Makes the first character in a string uppercase.
- * @param {string} text string to be formatted.
- * @return {string} text with uppercase first char.
+ * @param text string to be formatted.
+ * @return text with uppercase first char.
  */
-export const capitalize = (text: string): string => {
-    if (text && typeof text === 'string') {
-        const textArray = text?.split('');
-        textArray[0] = textArray[0].toUpperCase();
-        return textArray.join('');
-    } else {
-        return '';
-    }
+export const capitalize = (text = '') => {
+	const thisText = safeString(text);
+    const textArray = thisText?.split('');
+    textArray[0] = textArray[0].toUpperCase();
+    return textArray.join('');
 };
 
 
