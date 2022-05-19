@@ -1312,3 +1312,30 @@ export const jsonParse = (data: any) => {
 };
 
 
+/**
+ * Function for handling promises.
+ * @param {Promise<any>} promise Promise to be resolved and processed.
+ * @param {string?} undefinedError Error-message to use in case the response is undefined.
+ * @param {genObject?} target An object the result can be appended to. The result is still returned.
+ * @return {Promise<any>} A promise that resolves to an object with a result-property, 
+ *  - or an error-property. If the result is undefined, and undefinedError-parameter is not defined, null is returned.
+ */
+ export const handlePromise = async (promise: Promise<any>, undefinedError?: string, target?: genObject) => {
+	//Check that passed value is a promise
+	if(!((promise || {}).then instanceof Function)) return Error('Passed value is not a promise.');
+    
+	//Resolve and catch promise.
+	const result = await promise.catch(error => error);
+
+	//If result is undefined, returned specified error, or result.
+	if(result === undefined && undefinedError) return Error(undefinedError);
+    
+	//If result is an error, return the error.
+	if(isError(result)) return result;
+
+	//If target is defined, and is an object, and result is also an object, merge result with target.
+	if(isObject(target) && isObject(result)) Object.assign(target, result);
+    
+	//Return result.
+	return result;
+};
