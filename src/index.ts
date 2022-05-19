@@ -1336,3 +1336,272 @@ export const jsonParse = (data: any) => {
 	//Return result.
 	return result;
 };
+
+
+/**
+ * Handles a promise and returns an array with result as first item and any errors as second item.
+ * 	- Only result or error is defined
+ * @param {Promise} promise Promise to be handled
+ * @returns {Array} [result?, error?]
+ */
+ export const easyPromise = async (promise: Promise<any>) => {
+	const result = await handlePromise(promise, 'I promise nothing!!!');
+	if(isError(result)) return [undefined, result];
+	return [result];
+};
+
+
+
+/**
+ * Makes the first character in a string uppercase.
+ * @param {string} text string to be formatted.
+ * @return {string} text with uppercase first char.
+ */
+export const firstUpperCase = (text: string) => {
+	if(text) {
+		const textArray = text.split('');
+		textArray[0] = textArray[0].toUpperCase();
+		return textArray.join('');
+	} else {
+		return '';
+	}
+};
+
+
+/**
+ * Removes undefined values from object.
+ * @param {object} object Object to remove undefined from.
+ * @return {object} New object with undefined values removed.
+ */
+export const removeUndefined = (object: genObject) => {
+	//New empty object.
+	const newObject: genObject = {};
+
+	// Iterate through passed object to check for undefined,
+	// and to push valid values to the new object.
+	for(const item in object) {
+		if(object[item] !== undefined) newObject[item] = object[item];
+	}
+
+	//Return new object.
+	return newObject;
+};
+
+
+/**
+ * Check data for errors
+ * @param {any} data Data to check for errors.
+ * @param {Error | undefined} error Error-variable that either contains an error, or is undefined.
+ * @returns {any} Returns data as it was passed, or error-object.
+ */
+export const checkForErrors = (data: any, error?: Error) => {
+
+	//if data don't exist, or has errors, or error-variable is not undefined...
+	if(!data || isError(data) || error) {
+
+		//...then search for error-message and return it in an error-object.
+		if(!data) return {error: 'No data found...'};
+		if(data.message) return {error: data.message};
+		if(data.raw) return {error: data.raw.message};
+		if(data.error) return {error: data.error};
+		if(error) return {error: error.message};
+
+		//If no of the above, return 'no data found'-error.
+		return {error: 'No data found...'};
+	}
+
+	//If no errors is found, return data as it was passed.
+	return data;
+};
+
+
+/**
+ * Checks if an object is empty.
+ * @param {object} data object to be checked.
+ * @return {boolean} True if empty, False if not, or if value is not object.
+ */
+export const isEmptyObject = (data: genObject) => {
+	if(!data) return false;
+	if(typeof data !== 'object') return false;
+	if(Array.isArray(data)) return false;
+
+	return !Object.keys(data).length;
+};
+
+
+/**
+ * Function for emptying an object for keys and values.
+ * !! THIS EMPTIES PASSED OBJECT. IT DOES NOT RETURN A NEW EMPTY OBJECT !!
+ * @param {object} data Object to empty
+ * @return {object} emptied object.
+ */
+export const emptyObject = (data: genObject) => {
+	const keys = Object.keys(data);
+
+	keys.forEach((thisKey) => {
+		delete data[thisKey];
+	});
+
+	return data;
+};
+
+
+/**
+ * Checks if a string is a valid email
+ * @param {string} email
+ */
+export const isValidEmail = (email: string) => {
+	if(typeof email !== 'string') return false;
+
+	//Regex for testing valid emails
+	//TODO: What rules does this check for?
+	const regex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+	return regex.test(email.toLowerCase());
+};
+
+
+/**
+ * TODO: Remove extra \n also
+ * Removes html-tags from a string.
+ * @param {string} message
+ * @return {string}
+ */
+export const removeHtml = (message: string) => {
+	return message
+		.replace(/<a(.+)?href=("|')(https?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&/=]*))("|')(.+)<\/a>/gm, '$3')
+		.replace(/<([a-z0-9 -_:;!%!,'"#=]+)(\s+)?\/?(\s+)?>/gm, '')
+		.replace(/\\n{2,}/gm, '\\n');
+};
+
+
+/**
+ * Decodes a base64-string
+ * @param {string} value String to be decoded
+ * @return {string}
+ */
+export const decode64 = (value?: any) => {
+	if(!value || typeof value !== 'string') return '';
+	return Buffer.from(value, 'base64').toString('utf-8');
+};
+
+
+
+
+/**
+ * Console.log a value, with a label, if defined.
+ * @param {any} data 
+ * @param {string} label 
+ * @return {void}
+ */
+export const printString = (data: any, label?: string) => {
+	isError(data) 
+		? console.log('ERROR: ', data.message) //eslint-disable-line no-console
+		: console.log(label ? label + ': ' : '', stringify(data)); //eslint-disable-line no-console
+};
+
+
+/**
+ * Function for getting a date-object. Returns todays date as default;
+ * @param {number?} day Number of days to shift date forwards (integer) or backwards (negative integer).
+ * @param {number?} month Number of months to shift date forwards (integer) or backwards (negative integer).
+ * @param {number?} year Number of years to shift date forwards (integer) or backwards (negative integer).
+ * @return {Date} Date-object
+ */
+export const getDate = (day?: number, month?: number, year?: number) => {
+	const date = new Date();
+	if(typeof day === 'number') date.setDate(date.getDate() + day);
+	if(typeof month === 'number') date.setMonth(date.getMonth() + month);
+	if(typeof year === 'number') date.setFullYear(date.getFullYear() + year);
+	return date;
+};
+
+
+
+
+
+/**
+ * Returns a function that makes Errors with prefixed text.
+ * @param {string?} prefix String to prefix error-messages.
+ * @return {Function} Function that makes a new Error-object with passed string.
+ */
+export const customError = (prefix?: string) => {
+	//Process prefix-string
+	const errorPrefix = prefix ? prefix + ': ' : '';
+    
+	//Return error-function.
+	return (message: string | genObject) => {
+		const processedMessage = (message as any || {}).message || message || '';
+		return Error(errorPrefix + processedMessage);
+	};
+};
+
+
+/**
+ * Returns new object only with properties present in the fields-array.
+ * @param {data} Object to be processed.
+ * @param {string[]} fields Properties-array
+ * @return {object} Data-object with approved fields. 
+ */
+export const filterProps = (data: genObject, fields: string[]) => {
+	//Check parameters
+	if(isEmpty(data) || 
+        isEmpty(fields) ||
+        !isObject(data) ||
+        !Array.isArray(fields)
+	) return data;
+
+	//Iterate through field-strings
+	const newObject: genObject = {};
+	fields.forEach((field) => {
+		if(!isEmpty(data[field])) newObject[field] = data[field];
+	});
+
+	//Return processed object.
+	return newObject;
+};
+
+
+/**
+ * Compares two dates to see if they are equal within given threshold.
+ * @param {string | number = 0} date1 Date as string or number
+ * @param {string | number = 0} date2 Date as string or number
+ * @param {number = 1000} threshold Highest allowed difference in milliseconds.
+ * @return {boolean} True if equal, false if not.
+ */
+export const isEqualDates = (date1 = 0, date2 = 0, threshold = 1000) => {
+	const dateNum1 = new Date(date1).valueOf();
+	const dateNum2 = new Date(date2).valueOf();
+
+	const difference = Math.abs(dateNum2 - dateNum1);
+	return difference < threshold;
+};
+
+
+/**
+ * Removes objects from array that has identical values for specified key
+ * @param {any[]} array Array of objects. 
+ * @param {string} key Key to check value of.
+ * @returns {any[]} Array with duplicates removed
+ */
+export const removeDuplicateObjects = (array: genObject[], key: string) => {
+	const newArray: genObject[] = [];
+	const existingValues: genObject[] = [];
+	safeArray(array).forEach((item) => {
+		if(!existingValues.includes(item[key])) {
+			existingValues.push(item[key]);
+			newArray.push(item);
+		}
+	});
+
+	return newArray;
+};
+
+
+/**
+ * Safe version of String.toLowerCase().
+ * @param {string} str String to convert to lower case.
+ * @returns {string}
+ */
+export const toLowerCase = (str = '') => {
+	return safeString(str)?.toLowerCase?.() || '';
+};

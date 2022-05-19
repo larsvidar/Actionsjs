@@ -450,4 +450,110 @@ export declare const jsonParse: (data: any) => any;
  *  - or an error-property. If the result is undefined, and undefinedError-parameter is not defined, null is returned.
  */
 export declare const handlePromise: (promise: Promise<any>, undefinedError?: string | undefined, target?: genObject | undefined) => Promise<any>;
+/**
+ * Handles a promise and returns an array with result as first item and any errors as second item.
+ * 	- Only result or error is defined
+ * @param {Promise} promise Promise to be handled
+ * @returns {Array} [result?, error?]
+ */
+export declare const easyPromise: (promise: Promise<any>) => Promise<any[]>;
+/**
+ * Makes the first character in a string uppercase.
+ * @param {string} text string to be formatted.
+ * @return {string} text with uppercase first char.
+ */
+export declare const firstUpperCase: (text: string) => string;
+/**
+ * Removes undefined values from object.
+ * @param {object} object Object to remove undefined from.
+ * @return {object} New object with undefined values removed.
+ */
+export declare const removeUndefined: (object: genObject) => genObject;
+/**
+ * Check data for errors
+ * @param {any} data Data to check for errors.
+ * @param {Error | undefined} error Error-variable that either contains an error, or is undefined.
+ * @returns {any} Returns data as it was passed, or error-object.
+ */
+export declare const checkForErrors: (data: any, error?: Error | undefined) => any;
+/**
+ * Checks if an object is empty.
+ * @param {object} data object to be checked.
+ * @return {boolean} True if empty, False if not, or if value is not object.
+ */
+export declare const isEmptyObject: (data: genObject) => boolean;
+/**
+ * Function for emptying an object for keys and values.
+ * !! THIS EMPTIES PASSED OBJECT. IT DOES NOT RETURN A NEW EMPTY OBJECT !!
+ * @param {object} data Object to empty
+ * @return {object} emptied object.
+ */
+export declare const emptyObject: (data: genObject) => genObject;
+/**
+ * Checks if a string is a valid email
+ * @param {string} email
+ */
+export declare const isValidEmail: (email: string) => boolean;
+/**
+ * TODO: Remove extra \n also
+ * Removes html-tags from a string.
+ * @param {string} message
+ * @return {string}
+ */
+export declare const removeHtml: (message: string) => string;
+/**
+ * Decodes a base64-string
+ * @param {string} value String to be decoded
+ * @return {string}
+ */
+export declare const decode64: (value?: any) => string;
+/**
+ * Console.log a value, with a label, if defined.
+ * @param {any} data
+ * @param {string} label
+ * @return {void}
+ */
+export declare const printString: (data: any, label?: string | undefined) => void;
+/**
+ * Function for getting a date-object. Returns todays date as default;
+ * @param {number?} day Number of days to shift date forwards (integer) or backwards (negative integer).
+ * @param {number?} month Number of months to shift date forwards (integer) or backwards (negative integer).
+ * @param {number?} year Number of years to shift date forwards (integer) or backwards (negative integer).
+ * @return {Date} Date-object
+ */
+export declare const getDate: (day?: number | undefined, month?: number | undefined, year?: number | undefined) => Date;
+/**
+ * Returns a function that makes Errors with prefixed text.
+ * @param {string?} prefix String to prefix error-messages.
+ * @return {Function} Function that makes a new Error-object with passed string.
+ */
+export declare const customError: (prefix?: string | undefined) => (message: string | genObject) => Error;
+/**
+ * Returns new object only with properties present in the fields-array.
+ * @param {data} Object to be processed.
+ * @param {string[]} fields Properties-array
+ * @return {object} Data-object with approved fields.
+ */
+export declare const filterProps: (data: genObject, fields: string[]) => genObject;
+/**
+ * Compares two dates to see if they are equal within given threshold.
+ * @param {string | number = 0} date1 Date as string or number
+ * @param {string | number = 0} date2 Date as string or number
+ * @param {number = 1000} threshold Highest allowed difference in milliseconds.
+ * @return {boolean} True if equal, false if not.
+ */
+export declare const isEqualDates: (date1?: number, date2?: number, threshold?: number) => boolean;
+/**
+ * Removes objects from array that has identical values for specified key
+ * @param {any[]} array Array of objects.
+ * @param {string} key Key to check value of.
+ * @returns {any[]} Array with duplicates removed
+ */
+export declare const removeDuplicateObjects: (array: genObject[], key: string) => genObject[];
+/**
+ * Safe version of String.toLowerCase().
+ * @param {string} str String to convert to lower case.
+ * @returns {string}
+ */
+export declare const toLowerCase: (str?: string) => string;
 export {};

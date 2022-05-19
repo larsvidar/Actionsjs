@@ -83,7 +83,7 @@ var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getSlug = exports.urlToArray = exports.noWrappingSlash = exports.noPreSlash = exports.noTrailingSlash = exports.isArray = exports.prependSlash = exports.isWebAdresse = exports.appendPagination = exports.safeString = exports.safeArray = exports.setHash = exports.openWindow = exports.constructParamsString = exports.stringify = exports.tryCatch = exports.formatNumber = exports.handleEvent = exports.serializeForm = exports.isObject = exports.stringToObject = exports.trimObject = exports.getTimeoutObject = exports.noError = exports.sortFromArray = exports.setTime = exports.paginateArray = exports.isValid = exports.prependUrl = exports.sleep = exports.removeEmpty = exports.isEmpty = exports.parseQuery = exports.makePdf = exports.formatDate = exports.genUid = exports.isError = exports.getTimeSince = exports.stringCheck = exports.sortObjectArray = exports.resizeImage = exports.toMinutes = exports.toHours = exports.addZero = exports.capitalize = exports.stringifyLink = exports.ansiToIso = exports.isoToAnsi = exports.compareArray = exports.safeWindow = void 0;
-exports.handlePromise = exports.jsonParse = exports.propClass = exports.addOrReplace = exports.makePathArray = exports.updateArray = exports.removeUrlParams = exports.removeExcessiveNewLines = exports.shallowEqualObject = exports.offsetArray = exports.objToUrlParams = exports.removeDuplicateArrayObjects = exports.hasChanges = exports.split = exports.forEach = exports.find = exports.filter = exports.map = exports.getMonth = void 0;
+exports.toLowerCase = exports.removeDuplicateObjects = exports.isEqualDates = exports.filterProps = exports.customError = exports.getDate = exports.printString = exports.decode64 = exports.removeHtml = exports.isValidEmail = exports.emptyObject = exports.isEmptyObject = exports.checkForErrors = exports.removeUndefined = exports.firstUpperCase = exports.easyPromise = exports.handlePromise = exports.jsonParse = exports.propClass = exports.addOrReplace = exports.makePathArray = exports.updateArray = exports.removeUrlParams = exports.removeExcessiveNewLines = exports.shallowEqualObject = exports.offsetArray = exports.objToUrlParams = exports.removeDuplicateArrayObjects = exports.hasChanges = exports.split = exports.forEach = exports.find = exports.filter = exports.map = exports.getMonth = void 0;
 /***** IMPORTS *****/
 var htmlToImage = __importStar(require("html-to-image"));
 /*** GLOBAL VARIABLES ***/
@@ -1356,3 +1356,264 @@ var handlePromise = function (promise, undefinedError, target) { return __awaite
     });
 }); };
 exports.handlePromise = handlePromise;
+/**
+ * Handles a promise and returns an array with result as first item and any errors as second item.
+ * 	- Only result or error is defined
+ * @param {Promise} promise Promise to be handled
+ * @returns {Array} [result?, error?]
+ */
+var easyPromise = function (promise) { return __awaiter(void 0, void 0, void 0, function () {
+    var result;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0: return [4 /*yield*/, (0, exports.handlePromise)(promise, 'I promise nothing!!!')];
+            case 1:
+                result = _a.sent();
+                if ((0, exports.isError)(result))
+                    return [2 /*return*/, [undefined, result]];
+                return [2 /*return*/, [result]];
+        }
+    });
+}); };
+exports.easyPromise = easyPromise;
+/**
+ * Makes the first character in a string uppercase.
+ * @param {string} text string to be formatted.
+ * @return {string} text with uppercase first char.
+ */
+var firstUpperCase = function (text) {
+    if (text) {
+        var textArray = text.split('');
+        textArray[0] = textArray[0].toUpperCase();
+        return textArray.join('');
+    }
+    else {
+        return '';
+    }
+};
+exports.firstUpperCase = firstUpperCase;
+/**
+ * Removes undefined values from object.
+ * @param {object} object Object to remove undefined from.
+ * @return {object} New object with undefined values removed.
+ */
+var removeUndefined = function (object) {
+    //New empty object.
+    var newObject = {};
+    // Iterate through passed object to check for undefined,
+    // and to push valid values to the new object.
+    for (var item in object) {
+        if (object[item] !== undefined)
+            newObject[item] = object[item];
+    }
+    //Return new object.
+    return newObject;
+};
+exports.removeUndefined = removeUndefined;
+/**
+ * Check data for errors
+ * @param {any} data Data to check for errors.
+ * @param {Error | undefined} error Error-variable that either contains an error, or is undefined.
+ * @returns {any} Returns data as it was passed, or error-object.
+ */
+var checkForErrors = function (data, error) {
+    //if data don't exist, or has errors, or error-variable is not undefined...
+    if (!data || (0, exports.isError)(data) || error) {
+        //...then search for error-message and return it in an error-object.
+        if (!data)
+            return { error: 'No data found...' };
+        if (data.message)
+            return { error: data.message };
+        if (data.raw)
+            return { error: data.raw.message };
+        if (data.error)
+            return { error: data.error };
+        if (error)
+            return { error: error.message };
+        //If no of the above, return 'no data found'-error.
+        return { error: 'No data found...' };
+    }
+    //If no errors is found, return data as it was passed.
+    return data;
+};
+exports.checkForErrors = checkForErrors;
+/**
+ * Checks if an object is empty.
+ * @param {object} data object to be checked.
+ * @return {boolean} True if empty, False if not, or if value is not object.
+ */
+var isEmptyObject = function (data) {
+    if (!data)
+        return false;
+    if (typeof data !== 'object')
+        return false;
+    if (Array.isArray(data))
+        return false;
+    return !Object.keys(data).length;
+};
+exports.isEmptyObject = isEmptyObject;
+/**
+ * Function for emptying an object for keys and values.
+ * !! THIS EMPTIES PASSED OBJECT. IT DOES NOT RETURN A NEW EMPTY OBJECT !!
+ * @param {object} data Object to empty
+ * @return {object} emptied object.
+ */
+var emptyObject = function (data) {
+    var keys = Object.keys(data);
+    keys.forEach(function (thisKey) {
+        delete data[thisKey];
+    });
+    return data;
+};
+exports.emptyObject = emptyObject;
+/**
+ * Checks if a string is a valid email
+ * @param {string} email
+ */
+var isValidEmail = function (email) {
+    if (typeof email !== 'string')
+        return false;
+    //Regex for testing valid emails
+    //TODO: What rules does this check for?
+    var regex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return regex.test(email.toLowerCase());
+};
+exports.isValidEmail = isValidEmail;
+/**
+ * TODO: Remove extra \n also
+ * Removes html-tags from a string.
+ * @param {string} message
+ * @return {string}
+ */
+var removeHtml = function (message) {
+    return message
+        .replace(/<a(.+)?href=("|')(https?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&/=]*))("|')(.+)<\/a>/gm, '$3')
+        .replace(/<([a-z0-9 -_:;!%!,'"#=]+)(\s+)?\/?(\s+)?>/gm, '')
+        .replace(/\\n{2,}/gm, '\\n');
+};
+exports.removeHtml = removeHtml;
+/**
+ * Decodes a base64-string
+ * @param {string} value String to be decoded
+ * @return {string}
+ */
+var decode64 = function (value) {
+    if (!value || typeof value !== 'string')
+        return '';
+    return Buffer.from(value, 'base64').toString('utf-8');
+};
+exports.decode64 = decode64;
+/**
+ * Console.log a value, with a label, if defined.
+ * @param {any} data
+ * @param {string} label
+ * @return {void}
+ */
+var printString = function (data, label) {
+    (0, exports.isError)(data)
+        ? console.log('ERROR: ', data.message) //eslint-disable-line no-console
+        : console.log(label ? label + ': ' : '', (0, exports.stringify)(data)); //eslint-disable-line no-console
+};
+exports.printString = printString;
+/**
+ * Function for getting a date-object. Returns todays date as default;
+ * @param {number?} day Number of days to shift date forwards (integer) or backwards (negative integer).
+ * @param {number?} month Number of months to shift date forwards (integer) or backwards (negative integer).
+ * @param {number?} year Number of years to shift date forwards (integer) or backwards (negative integer).
+ * @return {Date} Date-object
+ */
+var getDate = function (day, month, year) {
+    var date = new Date();
+    if (typeof day === 'number')
+        date.setDate(date.getDate() + day);
+    if (typeof month === 'number')
+        date.setMonth(date.getMonth() + month);
+    if (typeof year === 'number')
+        date.setFullYear(date.getFullYear() + year);
+    return date;
+};
+exports.getDate = getDate;
+/**
+ * Returns a function that makes Errors with prefixed text.
+ * @param {string?} prefix String to prefix error-messages.
+ * @return {Function} Function that makes a new Error-object with passed string.
+ */
+var customError = function (prefix) {
+    //Process prefix-string
+    var errorPrefix = prefix ? prefix + ': ' : '';
+    //Return error-function.
+    return function (message) {
+        var processedMessage = (message || {}).message || message || '';
+        return Error(errorPrefix + processedMessage);
+    };
+};
+exports.customError = customError;
+/**
+ * Returns new object only with properties present in the fields-array.
+ * @param {data} Object to be processed.
+ * @param {string[]} fields Properties-array
+ * @return {object} Data-object with approved fields.
+ */
+var filterProps = function (data, fields) {
+    //Check parameters
+    if ((0, exports.isEmpty)(data) ||
+        (0, exports.isEmpty)(fields) ||
+        !(0, exports.isObject)(data) ||
+        !Array.isArray(fields))
+        return data;
+    //Iterate through field-strings
+    var newObject = {};
+    fields.forEach(function (field) {
+        if (!(0, exports.isEmpty)(data[field]))
+            newObject[field] = data[field];
+    });
+    //Return processed object.
+    return newObject;
+};
+exports.filterProps = filterProps;
+/**
+ * Compares two dates to see if they are equal within given threshold.
+ * @param {string | number = 0} date1 Date as string or number
+ * @param {string | number = 0} date2 Date as string or number
+ * @param {number = 1000} threshold Highest allowed difference in milliseconds.
+ * @return {boolean} True if equal, false if not.
+ */
+var isEqualDates = function (date1, date2, threshold) {
+    if (date1 === void 0) { date1 = 0; }
+    if (date2 === void 0) { date2 = 0; }
+    if (threshold === void 0) { threshold = 1000; }
+    var dateNum1 = new Date(date1).valueOf();
+    var dateNum2 = new Date(date2).valueOf();
+    var difference = Math.abs(dateNum2 - dateNum1);
+    return difference < threshold;
+};
+exports.isEqualDates = isEqualDates;
+/**
+ * Removes objects from array that has identical values for specified key
+ * @param {any[]} array Array of objects.
+ * @param {string} key Key to check value of.
+ * @returns {any[]} Array with duplicates removed
+ */
+var removeDuplicateObjects = function (array, key) {
+    var newArray = [];
+    var existingValues = [];
+    safeArray(array).forEach(function (item) {
+        if (!existingValues.includes(item[key])) {
+            existingValues.push(item[key]);
+            newArray.push(item);
+        }
+    });
+    return newArray;
+};
+exports.removeDuplicateObjects = removeDuplicateObjects;
+/**
+ * Safe version of String.toLowerCase().
+ * @param {string} str String to convert to lower case.
+ * @returns {string}
+ */
+var toLowerCase = function (str) {
+    var _a, _b;
+    if (str === void 0) { str = ''; }
+    return ((_b = (_a = safeString(str)) === null || _a === void 0 ? void 0 : _a.toLowerCase) === null || _b === void 0 ? void 0 : _b.call(_a)) || '';
+};
+exports.toLowerCase = toLowerCase;
