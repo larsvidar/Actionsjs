@@ -441,4 +441,13 @@ export declare const propClass: (nativeClass?: string, propClass?: string) => st
  * @returns {object | any} Object from parsed json, or same data as was passed.
  */
 export declare const jsonParse: (data: any) => any;
+/**
+ * Function for handling promises.
+ * @param {Promise<any>} promise Promise to be resolved and processed.
+ * @param {string?} undefinedError Error-message to use in case the response is undefined.
+ * @param {genObject?} target An object the result can be appended to. The result is still returned.
+ * @return {Promise<any>} A promise that resolves to an object with a result-property,
+ *  - or an error-property. If the result is undefined, and undefinedError-parameter is not defined, null is returned.
+ */
+export declare const handlePromise: (promise: Promise<any>, undefinedError?: string | undefined, target?: genObject | undefined) => Promise<any>;
 export {};

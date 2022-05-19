@@ -83,7 +83,7 @@ var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getSlug = exports.urlToArray = exports.noWrappingSlash = exports.noPreSlash = exports.noTrailingSlash = exports.isArray = exports.prependSlash = exports.isWebAdresse = exports.appendPagination = exports.safeString = exports.safeArray = exports.setHash = exports.openWindow = exports.constructParamsString = exports.stringify = exports.tryCatch = exports.formatNumber = exports.handleEvent = exports.serializeForm = exports.isObject = exports.stringToObject = exports.trimObject = exports.getTimeoutObject = exports.noError = exports.sortFromArray = exports.setTime = exports.paginateArray = exports.isValid = exports.prependUrl = exports.sleep = exports.removeEmpty = exports.isEmpty = exports.parseQuery = exports.makePdf = exports.formatDate = exports.genUid = exports.isError = exports.getTimeSince = exports.stringCheck = exports.sortObjectArray = exports.resizeImage = exports.toMinutes = exports.toHours = exports.addZero = exports.capitalize = exports.stringifyLink = exports.ansiToIso = exports.isoToAnsi = exports.compareArray = exports.safeWindow = void 0;
-exports.jsonParse = exports.propClass = exports.addOrReplace = exports.makePathArray = exports.updateArray = exports.removeUrlParams = exports.removeExcessiveNewLines = exports.shallowEqualObject = exports.offsetArray = exports.objToUrlParams = exports.removeDuplicateArrayObjects = exports.hasChanges = exports.split = exports.forEach = exports.find = exports.filter = exports.map = exports.getMonth = void 0;
+exports.handlePromise = exports.jsonParse = exports.propClass = exports.addOrReplace = exports.makePathArray = exports.updateArray = exports.removeUrlParams = exports.removeExcessiveNewLines = exports.shallowEqualObject = exports.offsetArray = exports.objToUrlParams = exports.removeDuplicateArrayObjects = exports.hasChanges = exports.split = exports.forEach = exports.find = exports.filter = exports.map = exports.getMonth = void 0;
 /***** IMPORTS *****/
 var htmlToImage = __importStar(require("html-to-image"));
 /*** GLOBAL VARIABLES ***/
@@ -1322,3 +1322,37 @@ var jsonParse = function (data) {
     return result;
 };
 exports.jsonParse = jsonParse;
+/**
+ * Function for handling promises.
+ * @param {Promise<any>} promise Promise to be resolved and processed.
+ * @param {string?} undefinedError Error-message to use in case the response is undefined.
+ * @param {genObject?} target An object the result can be appended to. The result is still returned.
+ * @return {Promise<any>} A promise that resolves to an object with a result-property,
+ *  - or an error-property. If the result is undefined, and undefinedError-parameter is not defined, null is returned.
+ */
+var handlePromise = function (promise, undefinedError, target) { return __awaiter(void 0, void 0, void 0, function () {
+    var result;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                //Check that passed value is a promise
+                if (!((promise || {}).then instanceof Function))
+                    return [2 /*return*/, Error('Passed value is not a promise.')];
+                return [4 /*yield*/, promise.catch(function (error) { return error; })];
+            case 1:
+                result = _a.sent();
+                //If result is undefined, returned specified error, or result.
+                if (result === undefined && undefinedError)
+                    return [2 /*return*/, Error(undefinedError)];
+                //If result is an error, return the error.
+                if ((0, exports.isError)(result))
+                    return [2 /*return*/, result];
+                //If target is defined, and is an object, and result is also an object, merge result with target.
+                if ((0, exports.isObject)(target) && (0, exports.isObject)(result))
+                    Object.assign(target, result);
+                //Return result.
+                return [2 /*return*/, result];
+        }
+    });
+}); };
+exports.handlePromise = handlePromise;
