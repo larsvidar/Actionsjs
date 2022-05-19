@@ -35,10 +35,10 @@ export declare const ansiToIso: (str?: string) => string;
 export declare const stringifyLink: (link: string) => string;
 /**
  * Makes the first character in a string uppercase.
- * @param {string} text string to be formatted.
- * @return {string} text with uppercase first char.
+ * @param text string to be formatted.
+ * @return text with uppercase first char.
  */
-export declare const capitalize: (text: string) => string;
+export declare const capitalize: (text?: string) => string;
 /**
  * Adds zero in front of a number if it is lower than 10.
  * @param {number} number to add zero to.

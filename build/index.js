@@ -165,18 +165,15 @@ var stringifyLink = function (link) {
 exports.stringifyLink = stringifyLink;
 /**
  * Makes the first character in a string uppercase.
- * @param {string} text string to be formatted.
- * @return {string} text with uppercase first char.
+ * @param text string to be formatted.
+ * @return text with uppercase first char.
  */
 var capitalize = function (text) {
-    if (text && typeof text === 'string') {
-        var textArray = text === null || text === void 0 ? void 0 : text.split('');
-        textArray[0] = textArray[0].toUpperCase();
-        return textArray.join('');
-    }
-    else {
-        return '';
-    }
+    if (text === void 0) { text = ''; }
+    var thisText = safeString(text);
+    var textArray = thisText === null || thisText === void 0 ? void 0 : thisText.split('');
+    textArray[0] = textArray[0].toUpperCase();
+    return textArray.join('');
 };
 exports.capitalize = capitalize;
 /**
