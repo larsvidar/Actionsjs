@@ -1005,8 +1005,8 @@ export const getMonth = (rawDate: any, format: 'long' | 'short' = 'short', loc: 
  * @param {Function} action Function to process each item in array
  * @returns {any[]} Modified array
  */
-export function map<T = any>(arr: T[] = [], action: (item: T, index?: number) => any = (item) => item): any[] {
-    return safeArray(arr).map((item, index) => {
+export function map<T = any>(arr: T[] = [], action: (item: T, index?: number) => any = (item) => item): T[] {
+    return safeArray<T>(arr).map((item, index) => {
         return action(item, index);
     });
 }
@@ -1018,7 +1018,7 @@ export function map<T = any>(arr: T[] = [], action: (item: T, index?: number) =>
  * @param {Function} action Function to determine if item should be filtered out or not.
  * @returns {any[]} Filtered array
  */
- export function filter<T = any>(arr: T[] = [], action: (item: T) => boolean = () => false): any[] {
+ export function filter<T = any>(arr: T[] = [], action: (item: T) => boolean = () => false): T[] {
     return safeArray(arr).filter((item) => action(item));
 }
 
@@ -1040,7 +1040,7 @@ export function map<T = any>(arr: T[] = [], action: (item: T, index?: number) =>
  * @param {Function} action Function to run on each item in array.
  * @returns {void} Executes passed function.
  */
- export function forEach<T = any>(arr: T[] = [], action: (item: T, index?: number) => any = (item) => item) {
+ export function forEach<T = any>(arr: T[] = [], action: (item: T, index?: number) => void = (item) => item) {
     safeArray(arr).forEach((item, index) => {
         action(item, index);
     });
