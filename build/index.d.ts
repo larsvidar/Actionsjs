@@ -325,14 +325,14 @@ export declare const getMonth: (rawDate: any, format: "long" | "short" | undefin
  * @param {Function} action Function to process each item in array
  * @returns {any[]} Modified array
  */
-export declare function map<T = any>(arr?: T[], action?: (item: T, index?: number) => any): any[];
+export declare function map<T = any>(arr?: T[], action?: (item: T, index?: number) => any): T[];
 /**
  * Safe version of Array.prototype.filter.
  * @param {any[]} arr Array to filter
  * @param {Function} action Function to determine if item should be filtered out or not.
  * @returns {any[]} Filtered array
  */
-export declare function filter<T = any>(arr?: T[], action?: (item: T) => boolean): any[];
+export declare function filter<T = any>(arr?: T[], action?: (item: T) => boolean): T[];
 /**
  * Safe version of Array.prototype.find.
  * @param {any[]} arr Array to find item in
@@ -346,7 +346,7 @@ export declare function find<T = any>(arr?: T[], action?: (item: T) => boolean):
  * @param {Function} action Function to run on each item in array.
  * @returns {void} Executes passed function.
  */
-export declare function forEach<T = any>(arr?: T[], action?: (item: T, index?: number) => any): void;
+export declare function forEach<T = any>(arr?: T[], action?: (item: T, index?: number) => void): void;
 /**
  * Safe version of String.prototype.split method.
  * @param {string} value String to split.
@@ -410,7 +410,7 @@ export declare const removeUrlParams: (url: string) => any;
  * 	This can be an object, where defined keys will be matched, or any other values that will be checked for equality.
  * @returns {any[]} Returns array with replaced item.
  */
-export declare function updateArray<T>(array: T[], updatedItem: T, query: genObject | any, keepOldData?: boolean): any[];
+export declare function updateArray<T>(array: T[], updatedItem: T, query: genObject | any, keepOldData?: boolean): T[];
 /**
  * Takes a url-path and splits it into an array of slugs
  * @param path url-string to process.
@@ -427,7 +427,7 @@ export declare const makePathArray: (path: string) => any;
  * @param replace If true, replaces matched items instead of updating them.
  * @returns Updated array
  */
-export declare function addOrReplace<T extends IIndexableString>(data: T | T[], targetArray: T[], key?: string, replace?: boolean): any[];
+export declare function addOrReplace<T extends IIndexableString>(data: T | T[], targetArray: T[], key?: string, replace?: boolean): T[];
 /**
  * Adds passed prop-class to native component-class. If non exists, empty string is returned instead
  * @param nativeClass
@@ -556,4 +556,11 @@ export declare const removeDuplicateObjects: (array: genObject[], key: string) =
  * @returns {string}
  */
 export declare const toLowerCase: (str?: string) => string;
+/**
+ * Finds key for a value in an object.
+ * @param {genObject} fields Object to find value in.
+ * @param {any} value to find in object.
+ * @return {string} Name of key that holds value. Empty string if value is not found.
+ */
+export declare const getFieldName: (fields: genObject, value: any) => string;
 export {};

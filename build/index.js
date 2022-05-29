@@ -83,7 +83,7 @@ var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getSlug = exports.urlToArray = exports.noWrappingSlash = exports.noPreSlash = exports.noTrailingSlash = exports.isArray = exports.prependSlash = exports.isWebAdresse = exports.appendPagination = exports.safeString = exports.safeArray = exports.setHash = exports.openWindow = exports.constructParamsString = exports.stringify = exports.tryCatch = exports.formatNumber = exports.handleEvent = exports.serializeForm = exports.isObject = exports.stringToObject = exports.trimObject = exports.getTimeoutObject = exports.noError = exports.sortFromArray = exports.setTime = exports.paginateArray = exports.isValid = exports.prependUrl = exports.sleep = exports.removeEmpty = exports.isEmpty = exports.parseQuery = exports.makePdf = exports.formatDate = exports.genUid = exports.isError = exports.getTimeSince = exports.stringCheck = exports.sortObjectArray = exports.resizeImage = exports.toMinutes = exports.toHours = exports.addZero = exports.capitalize = exports.stringifyLink = exports.ansiToIso = exports.isoToAnsi = exports.compareArray = exports.safeWindow = void 0;
-exports.toLowerCase = exports.removeDuplicateObjects = exports.isEqualDates = exports.filterProps = exports.customError = exports.getDate = exports.printString = exports.decode64 = exports.removeHtml = exports.isValidEmail = exports.emptyObject = exports.isEmptyObject = exports.checkForErrors = exports.removeUndefined = exports.firstUpperCase = exports.easyPromise = exports.handlePromise = exports.jsonParse = exports.propClass = exports.addOrReplace = exports.makePathArray = exports.updateArray = exports.removeUrlParams = exports.removeExcessiveNewLines = exports.shallowEqualObject = exports.offsetArray = exports.objToUrlParams = exports.removeDuplicateArrayObjects = exports.hasChanges = exports.split = exports.forEach = exports.find = exports.filter = exports.map = exports.getMonth = void 0;
+exports.getFieldName = exports.toLowerCase = exports.removeDuplicateObjects = exports.isEqualDates = exports.filterProps = exports.customError = exports.getDate = exports.printString = exports.decode64 = exports.removeHtml = exports.isValidEmail = exports.emptyObject = exports.isEmptyObject = exports.checkForErrors = exports.removeUndefined = exports.firstUpperCase = exports.easyPromise = exports.handlePromise = exports.jsonParse = exports.propClass = exports.addOrReplace = exports.makePathArray = exports.updateArray = exports.removeUrlParams = exports.removeExcessiveNewLines = exports.shallowEqualObject = exports.offsetArray = exports.objToUrlParams = exports.removeDuplicateArrayObjects = exports.hasChanges = exports.split = exports.forEach = exports.find = exports.filter = exports.map = exports.getMonth = void 0;
 /***** IMPORTS *****/
 var htmlToImage = __importStar(require("html-to-image"));
 /*** GLOBAL VARIABLES ***/
@@ -549,6 +549,8 @@ var isEmpty = function (data) {
         return true;
     if ((0, exports.isError)(data))
         return false;
+    if (data instanceof Date)
+        return false;
     if (typeof data === 'object') {
         if (Array.isArray(data))
             return !data.length;
@@ -569,23 +571,17 @@ var removeEmpty = function (data) {
     if (data instanceof Date)
         return data;
     if (Array.isArray(data))
-        return data.filter(function (value) { return !!value; });
+        return data.filter(function (value) { return (0, exports.isEmpty)(value); });
     var keys = Object.keys(data);
     var newObject = {};
     keys.forEach(function (key) {
         var value = data[key];
-        if (!value)
-            if (![false, 0].includes(value))
-                return;
+        if (![false, 0].includes(value))
+            return;
         var type = typeof value;
         if (type === 'object') {
-            if (!(value instanceof Date)) {
-                if (Array.isArray(value))
-                    if (!value.length)
-                        return;
-                if (!Object.keys(value).length)
-                    return;
-            }
+            if ((0, exports.isEmpty)(value))
+                return;
         }
         newObject[key] = value;
     });
@@ -1617,3 +1613,13 @@ var toLowerCase = function (str) {
     return ((_b = (_a = safeString(str)) === null || _a === void 0 ? void 0 : _a.toLowerCase) === null || _b === void 0 ? void 0 : _b.call(_a)) || '';
 };
 exports.toLowerCase = toLowerCase;
+/**
+ * Finds key for a value in an object.
+ * @param {genObject} fields Object to find value in.
+ * @param {any} value to find in object.
+ * @return {string} Name of key that holds value. Empty string if value is not found.
+ */
+var getFieldName = function (fields, value) {
+    return Object.keys(fields).find(function (key) { return fields[key] === value; }) || '';
+};
+exports.getFieldName = getFieldName;
