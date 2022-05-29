@@ -22,3 +22,7 @@ test('RemoveEmpty Object', () => {
 test('RemoveEmpty Array', () => {
 	expect(removeEmpty(genArray)).toEqual(nonEmptyArray);
 });
+
+test('RemoveEmpty Test', () => {
+	expect(removeEmpty({"nonText": ""})).toEqual({});
+});

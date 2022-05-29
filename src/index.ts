@@ -494,17 +494,17 @@ export const parseQuery = (queryString: string): genObject => {
  * @return {boolean} True if empty, false if not.
  */
 export const isEmpty = (data: any) => {
-	if([undefined, null, NaN].includes(data)) return true;
+	if([0, false].includes(data)) return false;
+	if(!data) return true;
+
 	if(isError(data)) return false;
 	if(data instanceof Date) return false;
 	if(typeof data === 'object') {
 		if(Array.isArray(data)) return !data.length;
-
 		const keys = Object.keys(data);
 		return !keys.length;
 	}
 
-	if([false, 0].includes(data)) return true;
 	return !data;
 };
 
@@ -517,18 +517,20 @@ export const isEmpty = (data: any) => {
 export const removeEmpty = (data: any) => {
 	if(typeof data !== 'object') return data;
 	if(data instanceof Date) return data;
-	if(Array.isArray(data)) return data.filter((value) => isEmpty(value));
+	if(Array.isArray(data)) {
+		console.log('This is an array')
+		const newArr = data.filter((value) => !isEmpty(value));
+		console.log(newArr)
+		return newArr
+	}
 
 	const keys = Object.keys(data);
 
 	const newObject: any = {};
 	keys.forEach((key) => {
 		const value = data[key];
-
-		const type = typeof value;
-		if(type === 'object') {
-			if(isEmpty(value)) return;
-		}
+		
+		if(isEmpty(value)) return;
 
 		newObject[key] = value;
 	});

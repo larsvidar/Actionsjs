@@ -39,7 +39,7 @@ const nonEmptyObj = {
 	date: new Date(0),
 }
 
-export const genArray = [arr, obj];
+export const genArray = [...arr, obj];
 export const genObject = {...obj, arr};
 export const nonEmptyArray = [...nonEmptyArr, obj];
 export const nonEmptyObject = {...nonEmptyObj, arr};
