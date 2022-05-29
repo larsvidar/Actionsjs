@@ -493,18 +493,19 @@ export const parseQuery = (queryString: string): genObject => {
  * @param {any} data data to check.
  * @return {boolean} True if empty, false if not.
  */
-export const isEmpty = (data: any): boolean => {
-    if([undefined, null, NaN].includes(data)) return true;
-    if(isError(data)) return false;
+export const isEmpty = (data: any) => {
+	if([undefined, null, NaN].includes(data)) return true;
+	if(isError(data)) return false;
 	if(data instanceof Date) return false;
-    if(typeof data === 'object') {
-        if (Array.isArray(data)) return !data.length;
+	if(typeof data === 'object') {
+		if(Array.isArray(data)) return !data.length;
 
-        const keys = Object.keys(data);
-        return !keys.length;
-    }
+		const keys = Object.keys(data);
+		return !keys.length;
+	}
 
-    return !data;
+	if([false, 0].includes(data)) return true;
+	return !data;
 };
 
 
@@ -513,27 +514,26 @@ export const isEmpty = (data: any): boolean => {
  * @param {any} data to check for undefined values.
  * @return {genObject} Filtered object without undefined values. 
  */
-export const removeEmpty = (data: any): any => {
-    if(typeof data !== 'object') return data;
-    if(data instanceof Date) return data;
-    if(Array.isArray(data)) return data.filter((value: any) => isEmpty(value));
+export const removeEmpty = (data: any) => {
+	if(typeof data !== 'object') return data;
+	if(data instanceof Date) return data;
+	if(Array.isArray(data)) return data.filter((value) => isEmpty(value));
 
-    const keys: string[] = Object.keys(data);
+	const keys = Object.keys(data);
 
-    const newObject: genObject = {};
-    keys.forEach((key: string) => {
-        const value = data[key];
-        if(![false, 0].includes(value)) return;
+	const newObject: any = {};
+	keys.forEach((key) => {
+		const value = data[key];
 
-        const type = typeof value;
-        if(type === 'object') {
-            if(isEmpty(value)) return;
-        }
+		const type = typeof value;
+		if(type === 'object') {
+			if(isEmpty(value)) return;
+		}
 
-        newObject[key] = value;
-    });
+		newObject[key] = value;
+	});
 
-    return newObject;
+	return newObject;
 };
 
 

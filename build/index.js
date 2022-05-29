@@ -557,6 +557,8 @@ var isEmpty = function (data) {
         var keys = Object.keys(data);
         return !keys.length;
     }
+    if ([false, 0].includes(data))
+        return true;
     return !data;
 };
 exports.isEmpty = isEmpty;
@@ -576,8 +578,6 @@ var removeEmpty = function (data) {
     var newObject = {};
     keys.forEach(function (key) {
         var value = data[key];
-        if (![false, 0].includes(value))
-            return;
         var type = typeof value;
         if (type === 'object') {
             if ((0, exports.isEmpty)(value))
