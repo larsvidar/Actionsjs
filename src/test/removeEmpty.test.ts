@@ -24,5 +24,5 @@ test('RemoveEmpty Array', () => {
 });
 
 test('RemoveEmpty Test', () => {
-	expect(removeEmpty({"nonText": ""})).toEqual({});
+	expect(removeEmpty({'': ''})).toEqual({});
 });

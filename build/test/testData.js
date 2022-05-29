@@ -1,3 +1,4 @@
+"use strict";
 var __assign = (this && this.__assign) || function () {
     __assign = Object.assign || function(t) {
         for (var s, i = 1, n = arguments.length; i < n; i++) {
@@ -18,6 +19,8 @@ var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
     }
     return to.concat(ar || Array.prototype.slice.call(from));
 };
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.nonEmptyObject = exports.nonEmptyArray = exports.genObject = exports.genArray = void 0;
 var arr = [
     '', 'ok',
     0, 1,
@@ -54,7 +57,7 @@ var nonEmptyObj = {
     nonBoolean: false,
     date: new Date(0),
 };
-export var genArray = __spreadArray(__spreadArray([], arr, true), [obj], false);
-export var genObject = __assign(__assign({}, obj), { arr: arr });
-export var nonEmptyArray = __spreadArray(__spreadArray([], nonEmptyArr, true), [obj], false);
-export var nonEmptyObject = __assign(__assign({}, nonEmptyObj), { arr: arr });
+exports.genArray = __spreadArray(__spreadArray([], arr, true), [obj], false);
+exports.genObject = __assign(__assign({}, obj), { arr: arr });
+exports.nonEmptyArray = __spreadArray(__spreadArray([], nonEmptyArr, true), [obj], false);
+exports.nonEmptyObject = __assign(__assign({}, nonEmptyObj), { arr: arr });

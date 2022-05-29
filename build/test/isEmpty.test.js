@@ -1,5 +1,7 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 var isEmpty = require('../index').isEmpty;
-import { genArray, genObject, nonEmptyArray, nonEmptyObject } from './testData';
+var testData_1 = require("./testData");
 jest.mock('html-to-image');
 test('isEmpty Primitives', function () {
     expect(isEmpty()).toEqual(true);
@@ -18,10 +20,10 @@ test('isEmpty Primitives', function () {
     expect(isEmpty({ null: undefined })).toEqual(false);
 });
 test('isEmpty Object', function () {
-    expect(isEmpty(genObject)).toEqual(false);
-    expect(isEmpty(nonEmptyObject)).toEqual(false);
+    expect(isEmpty(testData_1.genObject)).toEqual(false);
+    expect(isEmpty(testData_1.nonEmptyObject)).toEqual(false);
 });
 test('isEmpty Array', function () {
-    expect(isEmpty(genArray)).toEqual(false);
-    expect(isEmpty(nonEmptyArray)).toEqual(false);
+    expect(isEmpty(testData_1.genArray)).toEqual(false);
+    expect(isEmpty(testData_1.nonEmptyArray)).toEqual(false);
 });
