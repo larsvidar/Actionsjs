@@ -496,6 +496,7 @@ export const parseQuery = (queryString: string): genObject => {
 export const isEmpty = (data: any): boolean => {
     if([undefined, null, NaN].includes(data)) return true;
     if(isError(data)) return false;
+	if(data instanceof Date) return false;
     if(typeof data === 'object') {
         if (Array.isArray(data)) return !data.length;
 
@@ -515,21 +516,18 @@ export const isEmpty = (data: any): boolean => {
 export const removeEmpty = (data: any): any => {
     if(typeof data !== 'object') return data;
     if(data instanceof Date) return data;
-    if(Array.isArray(data)) return data.filter((value: any) => !!value);
+    if(Array.isArray(data)) return data.filter((value: any) => isEmpty(value));
 
     const keys: string[] = Object.keys(data);
 
     const newObject: genObject = {};
     keys.forEach((key: string) => {
         const value = data[key];
-        if (!value) if (![false, 0].includes(value)) return;
+        if(![false, 0].includes(value)) return;
 
         const type = typeof value;
         if(type === 'object') {
-            if(!(value instanceof Date)) {
-                if (Array.isArray(value)) if (!value.length) return;
-                if (!Object.keys(value).length) return;
-            }
+            if(isEmpty(value)) return;
         }
 
         newObject[key] = value;
@@ -1604,4 +1602,15 @@ export const removeDuplicateObjects = (array: genObject[], key: string) => {
  */
 export const toLowerCase = (str = '') => {
 	return safeString(str)?.toLowerCase?.() || '';
+};
+
+
+/**
+ * Finds key for a value in an object.
+ * @param {genObject} fields Object to find value in.
+ * @param {any} value to find in object.
+ * @return {string} Name of key that holds value. Empty string if value is not found.
+ */
+export const getFieldName = (fields: genObject, value: any): string => {
+	return Object.keys(fields).find(key => fields[key] === value) || '';
 };
