@@ -518,9 +518,7 @@ export const removeEmpty = (data: any) => {
 	if(typeof data !== 'object') return data;
 	if(data instanceof Date) return data;
 	if(Array.isArray(data)) {
-		console.log('This is an array')
 		const newArr = data.filter((value) => !isEmpty(value));
-		console.log(newArr)
 		return newArr
 	}
 
