@@ -573,9 +573,7 @@ var removeEmpty = function (data) {
     if (data instanceof Date)
         return data;
     if (Array.isArray(data)) {
-        console.log('This is an array');
         var newArr = data.filter(function (value) { return !(0, exports.isEmpty)(value); });
-        console.log(newArr);
         return newArr;
     }
     var keys = Object.keys(data);
