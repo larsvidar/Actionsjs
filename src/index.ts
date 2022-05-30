@@ -30,12 +30,12 @@ import {genObject, IIndexableString} from './types';
  * @return {Array<any>} Array of duplicate values from both arrays.
  */
 export const compareArray = (arr1: any, arr2: any) => {
-    arr1 = safeArray(arr1);
-    arr2 = safeArray(arr2);
+	arr1 = safeArray(arr1);
+	arr2 = safeArray(arr2);
 
-    return arr1.filter((value: any) => {
-        return arr2.includes(value);
-    });
+	return arr1.filter((value: any) => {
+		return arr2.includes(value);
+	});
 };
 
 /**
@@ -44,14 +44,14 @@ export const compareArray = (arr1: any, arr2: any) => {
  * @returns {string}
 */
 export const isoToAnsi = (str = '') => {
-    const lowerCaseStr = safeString(str.toLocaleLowerCase());
-    return lowerCaseStr
-        .replace(/ø/g, '+o')
-        .replace(/Ø/g, '+O')
-        .replace(/æ/g, '+e')
-        .replace(/Æ/g, '+E')
-        .replace(/å/g, '+a')
-        .replace(/Å/g, '+A');
+	const lowerCaseStr = safeString(str.toLocaleLowerCase());
+	return lowerCaseStr
+		.replace(/ø/g, '+o')
+		.replace(/Ø/g, '+O')
+		.replace(/æ/g, '+e')
+		.replace(/Æ/g, '+E')
+		.replace(/å/g, '+a')
+		.replace(/Å/g, '+A');
 };
 
 
@@ -61,13 +61,13 @@ export const isoToAnsi = (str = '') => {
  * @returns {string}
 */
 export const ansiToIso = (str = '') => {
-    return str
-        .replace(/\+o/g, 'ø')
-        .replace(/\+O/g, 'Ø')
-        .replace(/\+e/g, 'æ')
-        .replace(/\+E/g, 'Æ')
-        .replace(/\+a/g, 'å')
-        .replace(/\+A/g, 'Å');
+	return str
+		.replace(/\+o/g, 'ø')
+		.replace(/\+O/g, 'Ø')
+		.replace(/\+e/g, 'æ')
+		.replace(/\+E/g, 'Æ')
+		.replace(/\+a/g, 'å')
+		.replace(/\+A/g, 'Å');
 };
 
 
@@ -77,17 +77,17 @@ export const ansiToIso = (str = '') => {
  * @return {string} the formatted string.
  */
 export const stringifyLink = (link: string): string => {
-    if(link) {
-        const newLink = link.toLowerCase()
-            .replace(/ø/g, 'o')
-            .replace(/æ/g, 'e')
-            .replace(/å/g, 'a')
-            .replace(/\s/g, '-')
-            .replace(/[^a-z0-9-.\s]/g, '');
+	if(link) {
+		const newLink = link.toLowerCase()
+			.replace(/ø/g, 'o')
+			.replace(/æ/g, 'e')
+			.replace(/å/g, 'a')
+			.replace(/\s/g, '-')
+			.replace(/[^a-z0-9-.\s]/g, '');
 
-        return newLink;
-    }
-    return 'undefined-stringify-link';
+		return newLink;
+	}
+	return 'undefined-stringify-link';
 };
 
 
@@ -98,9 +98,9 @@ export const stringifyLink = (link: string): string => {
  */
 export const capitalize = (text = '') => {
 	const thisText = safeString(text);
-    const textArray = thisText?.split('');
-    textArray[0] = textArray[0].toUpperCase();
-    return textArray.join('');
+	const textArray = thisText?.split('');
+	textArray[0] = textArray[0].toUpperCase();
+	return textArray.join('');
 };
 
 
@@ -110,11 +110,11 @@ export const capitalize = (text = '') => {
  * @return {string} zerofied-number as string.
  */
 export const addZero = (number: number): string => {
-    if (typeof number !== 'number') return '0';
+	if(typeof number !== 'number') return '0';
 
-    return number < 10 && number > -1
-        ? '0' + Math.floor(number).toString()
-        : Math.floor(number).toString();
+	return number < 10 && number > -1
+		? '0' + Math.floor(number).toString()
+		: Math.floor(number).toString();
 };
 
 
@@ -124,17 +124,17 @@ export const addZero = (number: number): string => {
  * @return {string} Formatted string (eg. 2t 5m)
  */
 export const toHours = (minutes: number, loc?: genObject): string => {
-    //Language locale
-    if(!loc) loc = {
-        minutesShort: 'm',
-        hoursShort: 't',
-    };
+	//Language locale
+	if(!loc) loc = {
+		minutesShort: 'm',
+		hoursShort: 't',
+	};
 
-    if (!minutes || minutes < 0) return '0 ' + loc.minutesShort;
+	if(!minutes || minutes < 0) return '0 ' + loc.minutesShort;
 
-    return `${Math.floor(minutes / 60)
-        ? Math.floor(minutes / 60) + loc.hoursShort + ' '
-        : ''}${minutes % 60 === 0 ? '' : minutes % 60 + loc.minutesShort}`;
+	return `${Math.floor(minutes / 60)
+		? Math.floor(minutes / 60) + loc.hoursShort + ' '
+		: ''}${minutes % 60 === 0 ? '' : minutes % 60 + loc.minutesShort}`;
 };
 
 /**
@@ -143,17 +143,17 @@ export const toHours = (minutes: number, loc?: genObject): string => {
  * @return {string} Formatted string (eg. 2m 5s)
  */
 export const toMinutes = (seconds: number, loc?: genObject): string => {
-    //Language locale
-    if(!loc) loc = {
-        secondsShort: 's',
-        minutesShort: 'm',
-    };
+	//Language locale
+	if(!loc) loc = {
+		secondsShort: 's',
+		minutesShort: 'm',
+	};
 
-    if (!seconds || seconds < 0) return '0 ' + loc.minutesShort;
+	if(!seconds || seconds < 0) return '0 ' + loc.minutesShort;
 
-    return `${Math.floor(seconds / 60)
-        ? Math.floor(seconds / 60) + loc.minutesShort + ' '
-        : ''}${seconds % 60 === 0 ? '' : seconds % 60 + loc.secondsShort}`;
+	return `${Math.floor(seconds / 60)
+		? Math.floor(seconds / 60) + loc.minutesShort + ' '
+		: ''}${seconds % 60 === 0 ? '' : seconds % 60 + loc.secondsShort}`;
 };
 
 
@@ -162,7 +162,7 @@ export const toMinutes = (seconds: number, loc?: genObject): string => {
  * @param {any} file from formData to be reduced.
  * @return {{file: genObject, messages: string[]}} Object with file-object and messages.
  */
- export const resizeImage = async (file: File, options: genObject) => {
+export const resizeImage = async (file: File, options: genObject) => {
 	const messages: string[] = [];
 	if(!(file?.type || '').match(/image\//gi)) {
 		messages.push('Invalid file type');
@@ -229,27 +229,27 @@ export const toMinutes = (seconds: number, loc?: genObject): string => {
  * @param {string='asc'} sort - Optional - Sort order: 'asc' or 'desc'. Default = 'asc'. 
  * @return {Array<genObject>} New array of sorted objects.
  */
-export const sortObjectArray = <T extends genObject,>(array: T[], key: string, sort: string = 'asc'): T[] => {
+export const sortObjectArray = <T extends genObject, >(array: T[], key: string, sort = 'asc'): T[] => {
 	//If array is empty, just return array.
 	if(!Array.isArray(array) || !array?.length) return [];
 
-    //Returns sorted array
-    return [...array].sort((a: any, b: any) => {
+	//Returns sorted array
+	return [...array].sort((a: any, b: any) => {
 
-        //Checking sort-order.
-        const sortFactor = sort.toLowerCase() === 'asc' ? 1 : -1;
+		//Checking sort-order.
+		const sortFactor = sort.toLowerCase() === 'asc' ? 1 : -1;
 
-        const sortKey = key;
+		const sortKey = key;
 
-        //Converting to lower-case if property is string.
-        const value1 = typeof a[sortKey] === 'string' ? a[sortKey].toLowerCase() : a[sortKey];
-        const value2 = typeof b[sortKey] === 'string' ? b[sortKey].toLowerCase() : b[sortKey];
+		//Converting to lower-case if property is string.
+		const value1 = typeof a[sortKey] === 'string' ? a[sortKey].toLowerCase() : a[sortKey];
+		const value2 = typeof b[sortKey] === 'string' ? b[sortKey].toLowerCase() : b[sortKey];
 
-        //comparing values.
-        return (value1 || '') > (value2 || '')
-            ? sortFactor
-            : -sortFactor;
-    });
+		//comparing values.
+		return (value1 || '') > (value2 || '')
+			? sortFactor
+			: -sortFactor;
+	});
 };
 
 
@@ -259,9 +259,9 @@ export const sortObjectArray = <T extends genObject,>(array: T[], key: string, s
  * @return {boolean} Returns true if string, false if not.
  */
 export const stringCheck = (value: any): boolean => {
-    return typeof value === 'string'
-        ? true
-        : false;
+	return typeof value === 'string'
+		? true
+		: false;
 };
 
 
@@ -271,59 +271,59 @@ export const stringCheck = (value: any): boolean => {
  * @param {boolean} short If true, a short-form of the string will be returned.
  * @return {string} A string telling how long ago passed date was.
  */
-export const getTimeSince = (date: number, short: boolean = false): string => {
-    if (!date) {
-        return short ? '0 s' : '0 sekunder siden';
-    }
+export const getTimeSince = (date: number, short = false): string => {
+	if(!date) {
+		return short ? '0 s' : '0 sekunder siden';
+	}
 
-    //Get todays date.
-    const today: number = Date.now();
+	//Get todays date.
+	const today: number = Date.now();
 
-    //Get milliseconds since passed date.
-    const time: number = today - date;
+	//Get milliseconds since passed date.
+	const time: number = today - date;
 
-    //Convert milliseconds to a human-readable string.
-    //Seconds...
-    const seconds: number = time / 1000;
-    if (seconds < 60) return short
-        ? `${Math.round(seconds)} s`
-        : `${Math.round(seconds)} sekunder siden`;
+	//Convert milliseconds to a human-readable string.
+	//Seconds...
+	const seconds: number = time / 1000;
+	if(seconds < 60) return short
+		? `${Math.round(seconds)} s`
+		: `${Math.round(seconds)} sekunder siden`;
 
-    //Minutes...
-    const minutes: number = seconds / 60;
-    if (minutes < 60) return short
-        ? `${Math.round(minutes)} m`
-        : `${Math.round(minutes)} minutter siden`;
+	//Minutes...
+	const minutes: number = seconds / 60;
+	if(minutes < 60) return short
+		? `${Math.round(minutes)} m`
+		: `${Math.round(minutes)} minutter siden`;
 
-    //Hours...
-    const hours: number = minutes / 60;
-    if (hours < 24) return short
-        ? `${Math.round(hours)} t`
-        : `${Math.round(hours)} timer siden`;
+	//Hours...
+	const hours: number = minutes / 60;
+	if(hours < 24) return short
+		? `${Math.round(hours)} t`
+		: `${Math.round(hours)} timer siden`;
 
-    //Days...
-    const days: number = hours / 24;
-    if (days < 7) return short
-        ? `${Math.round(days)} d`
-        : `${Math.round(days)} dager siden`;
+	//Days...
+	const days: number = hours / 24;
+	if(days < 7) return short
+		? `${Math.round(days)} d`
+		: `${Math.round(days)} dager siden`;
 
-    //Weeks...
-    const weeks: number = days / 7;
-    if (weeks < 4) return short
-        ? `${Math.round(weeks)} u`
-        : `${Math.round(weeks)} uker siden`;
+	//Weeks...
+	const weeks: number = days / 7;
+	if(weeks < 4) return short
+		? `${Math.round(weeks)} u`
+		: `${Math.round(weeks)} uker siden`;
 
-    //Months...
-    const months: number = days / 30.35;
-    if (months < 12) return short
-        ? `${Math.round(months)} mnd`
-        : `${Math.round(months)} måneder siden`;
+	//Months...
+	const months: number = days / 30.35;
+	if(months < 12) return short
+		? `${Math.round(months)} mnd`
+		: `${Math.round(months)} måneder siden`;
 
-    //Years...
-    const years: number = days / 364.25;
-    return short
-        ? `${Math.round(years)} år`
-        : `${Math.round(years)} år siden`;
+	//Years...
+	const years: number = days / 364.25;
+	return short
+		? `${Math.round(years)} år`
+		: `${Math.round(years)} år siden`;
 };
 
 
@@ -333,12 +333,12 @@ export const getTimeSince = (date: number, short: boolean = false): string => {
  * @return {boolean} True if error, false if not.
  */
 export const isError = (value: any): value is Error => value instanceof Error
-    ? true
-    : value && value.error
-        ? true
-        : value?.meta?.error
-            ? true
-            : false;
+	? true
+	: value && value.error
+		? true
+		: value?.meta?.error
+			? true
+			: false;
 
 
 /**
@@ -346,23 +346,23 @@ export const isError = (value: any): value is Error => value instanceof Error
  * @param {number} size - Default value: 16 - Length of UUID-string.
  * @return {string} UUID-string.
  */
-export const genUid = (size: number = 16): string => {
-    //Make variable for Uid.
-    let code: string = '';
+export const genUid = (size = 16): string => {
+	//Make variable for Uid.
+	let code = '';
 
-    //Loop through number of characters
-    for (let i = 0; i < size; i++) {
+	//Loop through number of characters
+	for(let i = 0; i < size; i++) {
 
-        //Get random number or letter and add it to variable
-        if (Math.random() < .3) {
-            code += (Math.floor(Math.random() * 10));
-        } else {
-            code += String.fromCharCode(Math.floor(Math.random() * 26) + 97);
-        }
-    }
+		//Get random number or letter and add it to variable
+		if(Math.random() < .3) {
+			code += (Math.floor(Math.random() * 10));
+		} else {
+			code += String.fromCharCode(Math.floor(Math.random() * 26) + 97);
+		}
+	}
 
-    //Return finished code.
-    return code;
+	//Return finished code.
+	return code;
 };
 
 /*** Escaping inputs ***/
@@ -379,42 +379,40 @@ export const genUid = (size: number = 16): string => {
  */
 export const formatDate = (rawDate: string | number, format?: string): string => {
 
-    //Process date to format.
-    let dateNumber: string | number = rawDate;
-    if (!rawDate) dateNumber = Date.now();
-    if (typeof rawDate === 'string' && rawDate.length < 13 && !isNaN(+rawDate))
-        dateNumber = +(rawDate + '000');
-    if (typeof rawDate === 'number' && rawDate < 1000000000000)
-        dateNumber = rawDate * 1000;
-    if (isNaN(+rawDate)) dateNumber = new Date(rawDate).valueOf();
+	//Process date to format.
+	let dateNumber: string | number = rawDate;
+	if(!rawDate) dateNumber = Date.now();
+	if(typeof rawDate === 'string' && rawDate.length < 13 && !isNaN(+rawDate)) dateNumber = +(rawDate + '000');
+	if(typeof rawDate === 'number' && rawDate < 1000000000000) dateNumber = rawDate * 1000;
+	if(isNaN(+rawDate)) dateNumber = new Date(rawDate).valueOf();
 
 
-    //Make a date object.
-    const date: Date = new Date(+dateNumber);
+	//Make a date object.
+	const date: Date = new Date(+dateNumber);
 
-    //Return data based on format-string
-    switch(format) {
+	//Return data based on format-string
+	switch(format) {
 
-        //Return date as "jan. 2020"
-        case 'year': return date.toLocaleDateString('no-NB', {
-            year: 'numeric',
-        });
+		//Return date as "jan. 2020"
+		case 'year': return date.toLocaleDateString('no-NB', {
+			year: 'numeric',
+		});
 
-        //Return date as "jan. 2020"
-        case 'monthyear': return date.toLocaleDateString('no-NB', {
-            month: 'short', year: 'numeric',
-        });
+			//Return date as "jan. 2020"
+		case 'monthyear': return date.toLocaleDateString('no-NB', {
+			month: 'short', year: 'numeric',
+		});
 
-        //Return date as "january 2020"
-        case 'daymonthyear': return date.toLocaleDateString('no-NB', {
-            day: 'numeric', month: 'long', year: 'numeric',
-        });
+			//Return date as "january 2020"
+		case 'daymonthyear': return date.toLocaleDateString('no-NB', {
+			day: 'numeric', month: 'long', year: 'numeric',
+		});
 
-        //Return date as a DD.MM.YYYY string.
-        default: return date.toLocaleDateString('no-NB', {
-            day: '2-digit', month: '2-digit', year: 'numeric',
-        });
-    }
+			//Return date as a DD.MM.YYYY string.
+		default: return date.toLocaleDateString('no-NB', {
+			day: '2-digit', month: '2-digit', year: 'numeric',
+		});
+	}
 };
 
 /**
@@ -424,14 +422,14 @@ export const formatDate = (rawDate: string | number, format?: string): string =>
  */
 export const makePdf = async (element: HTMLElement, name: string): Promise<void> => {
 
-    //Make image of element.
-    const image = await htmlToImage.toJpeg(element, {width: 1110, height: 634});
+	//Make image of element.
+	const image = await htmlToImage.toJpeg(element, {width: 1110, height: 634});
 
-    //Make download-link and trigger it.
-    const downloadRef: HTMLAnchorElement = document.createElement('a');
-    downloadRef.href = image;
-    downloadRef.download = name + '.jpg';
-    downloadRef.click();
+	//Make download-link and trigger it.
+	const downloadRef: HTMLAnchorElement = document.createElement('a');
+	downloadRef.href = image;
+	downloadRef.download = name + '.jpg';
+	downloadRef.click();
 };
 
 
@@ -441,48 +439,48 @@ export const makePdf = async (element: HTMLElement, name: string): Promise<void>
  * @return {genObject} 
  */
 export const parseQuery = (queryString: string): genObject => {
-    queryString = safeString(queryString);
-    //Variable for holding final result.
-    const queryObject: genObject = {};
+	queryString = safeString(queryString);
+	//Variable for holding final result.
+	const queryObject: genObject = {};
 
-    //Check if queryString is not empty, and actually a string.
-    if (!queryString || typeof queryString !== 'string') return {};
+	//Check if queryString is not empty, and actually a string.
+	if(!queryString || typeof queryString !== 'string') return {};
 
-    //Split query-string from rest of url, and check for errors.
-    const query: Array<string> = safeString(decodeURI(queryString)).split('?');
+	//Split query-string from rest of url, and check for errors.
+	const query: Array<string> = safeString(decodeURI(queryString)).split('?');
 
-    //if(!query[1]) return new Error('Not a valid query-string.')
+	//if(!query[1]) return new Error('Not a valid query-string.')
 
-    //Split into individual key-value pairs.
-    const queryArray: Array<string> = query[1]
-        ? safeString(query[1]).split('&')
-        : safeString(query[0]).split('&');
+	//Split into individual key-value pairs.
+	const queryArray: Array<string> = query[1]
+		? safeString(query[1]).split('&')
+		: safeString(query[0]).split('&');
 
-    //Iterate through key-pairs and adding them to queryObject.
-    queryArray.forEach((item, index) => {
-        item = safeString(item);
-        const itemArray = item.split('=');
+	//Iterate through key-pairs and adding them to queryObject.
+	queryArray.forEach((item, index) => {
+		item = safeString(item);
+		const itemArray = item.split('=');
 
-        //If value is present, add it to queryObject...
-        if (itemArray[1]) {
-            let item: string | string[] = '';
+		//If value is present, add it to queryObject...
+		if(itemArray[1]) {
+			let item: string | string[] = '';
 
-            try {
-                item = JSON.parse(itemArray[1]);
-            } catch (thisError) {
-                item = itemArray[1];
-            }
+			try {
+				item = JSON.parse(itemArray[1]);
+			} catch (thisError) {
+				item = itemArray[1];
+			}
 
-            if (itemArray[0]) queryObject[itemArray[0]] = item;
+			if(itemArray[0]) queryObject[itemArray[0]] = item;
 
-            //If not, just push string into the single-item.
-        } else if (itemArray[0]) {
-            if (!queryObject.single) queryObject.single = [];
-            queryObject.single[index] = itemArray[0];
-        }
-    });
+			//If not, just push string into the single-item.
+		} else if(itemArray[0]) {
+			if(!queryObject.single) queryObject.single = [];
+			queryObject.single[index] = itemArray[0];
+		}
+	});
 
-    return queryObject;
+	return queryObject;
 };
 
 
@@ -519,7 +517,7 @@ export const removeEmpty = (data: any) => {
 	if(data instanceof Date) return data;
 	if(Array.isArray(data)) {
 		const newArr = data.filter((value) => !isEmpty(value));
-		return newArr
+		return newArr;
 	}
 
 	const keys = Object.keys(data);
@@ -543,7 +541,7 @@ export const removeEmpty = (data: any) => {
  * @return {Promise<undefined>} Returns empty promise that are resolved after passed number of milliseconds. 
  */
 export const sleep = (ms: number): Promise<void> => {
-    return new Promise(resolve => setTimeout(resolve, ms));
+	return new Promise(resolve => setTimeout(resolve, ms));
 };
 
 
@@ -554,9 +552,9 @@ export const sleep = (ms: number): Promise<void> => {
  * @returns 
  */
 export const prependUrl = (urlPrefix: string, url: string) => {
-    return isWebAdresse(url)
-        ? url
-        : noTrailingSlash(urlPrefix) + prependSlash(url);
+	return isWebAdresse(url)
+		? url
+		: noTrailingSlash(urlPrefix) + prependSlash(url);
 };
 
 
@@ -566,11 +564,11 @@ export const prependUrl = (urlPrefix: string, url: string) => {
  * @return {boolean} True if valid, false if empty or error.
  */
 export const isValid = (value: any): any => {
-    return !value || isEmpty(value)
-        ? false
-        : isError(value)
-            ? false
-            : true;
+	return !value || isEmpty(value)
+		? false
+		: isError(value)
+			? false
+			: true;
 };
 
 
@@ -582,13 +580,13 @@ export const isValid = (value: any): any => {
  * @param {number} quantity Number of items to get each time
  */
 export function paginateArray<T>(source: T[], quantity: number): T[] {
-    const target: any[] = [];
-    for (let i = 0; i < quantity; i++) {
-        if (!source.length) break;
-        target.push(source.pop());
-    }
+	const target: any[] = [];
+	for(let i = 0; i < quantity; i++) {
+		if(!source.length) break;
+		target.push(source.pop());
+	}
 
-    return target;
+	return target;
 }
 
 
@@ -599,8 +597,8 @@ export function paginateArray<T>(source: T[], quantity: number): T[] {
  * @return {void}
  */
 export const setTime = (text: string, end?: boolean): void => end
-    ? console.timeEnd(text)
-    : console.time(text);
+	? console.timeEnd(text)
+	: console.time(text);
 
 
 /**
@@ -610,20 +608,20 @@ export const setTime = (text: string, end?: boolean): void => end
  * @param {string} compareKey Key to get value from targetArray.
  * @return {T[]} Sorted array.
  */
-export const sortFromArray = <T extends genObject,>(targetArray: T[], sourceArray: any[], compareKey: string): T[] => {
-    targetArray = safeArray(targetArray);
-    sourceArray = safeArray(sourceArray);
+export const sortFromArray = <T extends genObject, >(targetArray: T[], sourceArray: any[], compareKey: string): T[] => {
+	targetArray = safeArray(targetArray);
+	sourceArray = safeArray(sourceArray);
 
-    const target: T[] = [];
+	const target: T[] = [];
 
-    sourceArray.forEach((item: any) => {
-        const [matchingItem] = targetArray.filter((thisItem: T) => {
-            return item === thisItem[compareKey];
-        });
-        if (matchingItem) target.push(matchingItem);
-    });
+	sourceArray.forEach((item: any) => {
+		const [matchingItem] = targetArray.filter((thisItem: T) => {
+			return item === thisItem[compareKey];
+		});
+		if(matchingItem) target.push(matchingItem);
+	});
 
-    return target;
+	return target;
 };
 
 
@@ -633,15 +631,15 @@ export const sortFromArray = <T extends genObject,>(targetArray: T[], sourceArra
  * @param type 
  */
 export const noError = (data: any, type: string): any => {
-    if (!isError(data)) return data;
+	if(!isError(data)) return data;
 
-    switch (type) {
-        case 'string': return '';
-        case 'number': return 0;
-        case 'array': return [];
-        case 'boolean': return false;
-        default: return {};
-    }
+	switch(type) {
+		case 'string': return '';
+		case 'number': return 0;
+		case 'array': return [];
+		case 'boolean': return false;
+		default: return {};
+	}
 };
 
 
@@ -651,17 +649,17 @@ export const noError = (data: any, type: string): any => {
  * @return {genObject} Object with clearAll-method
  */
 export const getTimeoutObject = (): genObject => {
-    return {
-        //Method for clearing all timeouts stored in object.
-        clearAll: function () {
-            Object.keys(this).forEach((key: string) => {
-                if (key !== 'clearAll') {
-                    clearTimeout(this[key]);
-                    delete this[key];
-                }
-            });
-        }
-    } as genObject;
+	return {
+		//Method for clearing all timeouts stored in object.
+		clearAll: function () {
+			Object.keys(this).forEach((key: string) => {
+				if(key !== 'clearAll') {
+					clearTimeout(this[key]);
+					delete this[key];
+				}
+			});
+		}
+	} as genObject;
 };
 
 
@@ -671,15 +669,15 @@ export const getTimeoutObject = (): genObject => {
  * @return {genObject} Trimmed-object.
  */
 export function trimObject<T = genObject>(obj: genObject): T {
-    const newObj: any = {};
+	const newObj: any = {};
 
-    for (const key of Object.keys(obj)) {
-        newObj[key] = typeof obj[key] === 'string' 
-            ? obj[key].trim?.()?.replace?.(/\s{2,}/g, ' ') 
-            : obj[key];
-    }
+	for(const key of Object.keys(obj)) {
+		newObj[key] = typeof obj[key] === 'string' 
+			? obj[key].trim?.()?.replace?.(/\s{2,}/g, ' ') 
+			: obj[key];
+	}
 
-    return newObj;
+	return newObj;
 }
 
 /**
@@ -690,10 +688,10 @@ export function trimObject<T = genObject>(obj: genObject): T {
  * @returns {genObject} 
  */
 export const stringToObject = (str: string): genObject => {
-    str = safeString(str);
-    return str?.split(',')
-        .map(val => safeString(val).split(':'))
-        .reduce((obj: genObject, [key, val]) => (obj[key] = val, obj), {});
+	str = safeString(str);
+	return str?.split(',')
+		.map(val => safeString(val).split(':'))
+		.reduce((obj: genObject, [key, val]) => (obj[key] = val, obj), {});
 };
 
 /**
@@ -702,8 +700,8 @@ export const stringToObject = (str: string): genObject => {
  * @return {boolean} True if valid object, false if not.
  */
 export const isObject = (value: any): value is genObject => {
-    if(value instanceof Error) return false;
-    return typeof value === 'object' && !Array.isArray(value);
+	if(value instanceof Error) return false;
+	return typeof value === 'object' && !Array.isArray(value);
 };
 
 
@@ -714,44 +712,44 @@ export const isObject = (value: any): value is genObject => {
  * @return {genObject} Object of key-value pairs from form-data;
  */
 export const serializeForm = (form: HTMLFormElement, target?: genObject) => {
-    //Checking values
-    const FAILSAFE = 1000;
-    if(!form) return {};
-    const targetObject = isObject(target) ? target : {};
+	//Checking values
+	const FAILSAFE = 1000;
+	if(!form) return {};
+	const targetObject = isObject(target) ? target : {};
     
-    //Trying to get entries from form-data.
-    const formData = tryCatch(() => new FormData(form).entries());
-    if(isError(formData)) return {};
+	//Trying to get entries from form-data.
+	const formData = tryCatch(() => new FormData(form).entries());
+	if(isError(formData)) return {};
     
-    //Iterate through form-data
-    let entry: any = formData.next();
-    let count = 0;
+	//Iterate through form-data
+	let entry: any = formData.next();
+	let count = 0;
 
-    while(!entry.done) {
-        count++;
+	while(!entry.done) {
+		count++;
 
-        //Check value and assign it if valid.
-        if(!entry?.value?.length) {
-            entry.done = true;
-        } else {
-            targetObject[entry.value[0]] = entry.value[1];
-            entry = formData.next();
-        }
+		//Check value and assign it if valid.
+		if(!entry?.value?.length) {
+			entry.done = true;
+		} else {
+			targetObject[entry.value[0]] = entry.value[1];
+			entry = formData.next();
+		}
 
-        //To avoid eternal loop
-        if(count > FAILSAFE) entry.done = true;
-    }
+		//To avoid eternal loop
+		if(count > FAILSAFE) entry.done = true;
+	}
 
-    return targetObject;
+	return targetObject;
 };
 
 
-export function handleEvent<T>(event: any, stopPropagation: boolean = false): T {
-    event.preventDefault();
-    if(stopPropagation) event.stopPropagation();
+export function handleEvent<T>(event: any, stopPropagation = false): T {
+	event.preventDefault();
+	if(stopPropagation) event.stopPropagation();
 
-    const target: any = event.target;
-    return target;
+	const target: any = event.target;
+	return target;
 }
 
 
@@ -760,10 +758,10 @@ export function handleEvent<T>(event: any, stopPropagation: boolean = false): T 
  * @param {number} value Number to be formatted.
  * @return {string | number}
  */
-export const formatNumber = (value: number, separator: string = ' ') => {
-    return value < 10000
-        ? value
-        : (value / 1000).toFixed(3).replace('.', separator);
+export const formatNumber = (value: number, separator = ' ') => {
+	return value < 10000
+		? value
+		: (value / 1000).toFixed(3).replace('.', separator);
 };
 
 
@@ -774,11 +772,11 @@ export const formatNumber = (value: number, separator: string = ' ') => {
  * @return {any} Returns whatever the passed function returners.
  */
 export const tryCatch = function(action: any) {
-    try {
-        return action();
-    } catch(error) {
-        return error;
-    }
+	try {
+		return action();
+	} catch (error) {
+		return error;
+	}
 };
 
 
@@ -789,7 +787,7 @@ export const tryCatch = function(action: any) {
  * @return {string}
  */
 export const stringify = (data: any, indention = 4): string => {
-    return JSON.stringify(data, null, indention);
+	return JSON.stringify(data, null, indention);
 };
 
 
@@ -799,18 +797,18 @@ export const stringify = (data: any, indention = 4): string => {
  * @return {string}
  */
 export const constructParamsString = (params: genObject) => {
-    let paramString = '';
+	let paramString = '';
 
-    if(!isObject(params)) return paramString;
+	if(!isObject(params)) return paramString;
 
-    for(const item in params) {
-        if(!paramString) paramString = '?';
-        else paramString += '&';
+	for(const item in params) {
+		if(!paramString) paramString = '?';
+		else paramString += '&';
 
-        paramString += item + '=' + params[item];
-    }
+		paramString += item + '=' + params[item];
+	}
 
-    return paramString;
+	return paramString;
 };
 
 
@@ -825,21 +823,21 @@ export const constructParamsString = (params: genObject) => {
  */
 export const openWindow = (url: string, width = 480, height= 640, top: number, left: number) => {
 
-    //Variables
-    if(!top) top = (safeWindow()?.screen.height / 3) - (height / 2);
-    if(!left) left = (safeWindow()?.screen.width / 2) - (width / 2);
+	//Variables
+	if(!top) top = (safeWindow()?.screen.height / 3) - (height / 2);
+	if(!left) left = (safeWindow()?.screen.width / 2) - (width / 2);
 
-    //Open new window
-    const newWindow = safeWindow()?.open(
-        url, 
-        '_blank', 
-        `top=${top},left=${left},width=${width},height=${height}`
-    );
-    if(!newWindow) {
-        return Error('Kunne ikke åpne vindu for bank-ID. Tillat popups fra siden');
-    }
+	//Open new window
+	const newWindow = safeWindow()?.open(
+		url, 
+		'_blank', 
+		`top=${top},left=${left},width=${width},height=${height}`
+	);
+	if(!newWindow) {
+		return Error('Kunne ikke åpne vindu for bank-ID. Tillat popups fra siden');
+	}
 
-    return newWindow;
+	return newWindow;
 };
 
 
@@ -849,8 +847,8 @@ export const openWindow = (url: string, width = 480, height= 640, top: number, l
  * @return {void}
  */
 export const setHash = (hash: string) => {
-    location.hash = '';
-    location.hash = hash;
+	location.hash = '';
+	location.hash = hash;
 };
 
 
@@ -860,8 +858,8 @@ export const setHash = (hash: string) => {
  * @return {any[]} Safe array.
  */
 export function safeArray<T>(array?: T[]): T[] {
-    if(Array.isArray(array)) return array;
-    return [];
+	if(Array.isArray(array)) return array;
+	return [];
 }
 
 
@@ -870,9 +868,9 @@ export function safeArray<T>(array?: T[]): T[] {
  * @param {string} value
  * @return {string} 
  */
-export function safeString(value: string = '') {
-    if(typeof value === 'string') return value;
-    return '';
+export function safeString(value = '') {
+	if(typeof value === 'string') return value;
+	return '';
 }
 
 
@@ -891,38 +889,38 @@ interface IPagination<T> {
  * @param {number = 10} itemsPrPage How many items should be fetched pr. page.
  */
 export function appendPagination<T = any>(arr: any[], page = 1, itemsPrPage = 10): IPagination<T> {
-    const array = safeArray(arr);
-    if(page < 1) page = 1;
+	const array = safeArray(arr);
+	if(page < 1) page = 1;
 
-    const numberOfItems = page * itemsPrPage;
-    const result = array.slice(0, numberOfItems);
+	const numberOfItems = page * itemsPrPage;
+	const result = array.slice(0, numberOfItems);
 
-    return {
-        result,
-        pages: Math.ceil(array.length / itemsPrPage),
-        items: array.length,
-        hasMore: numberOfItems < array.length,
-    };
+	return {
+		result,
+		pages: Math.ceil(array.length / itemsPrPage),
+		items: array.length,
+		hasMore: numberOfItems < array.length,
+	};
 }
 
 
 export const isWebAdresse = (url: string) => {
-    return safeString(url).substr(0, 4) === 'http';
+	return safeString(url).substr(0, 4) === 'http';
 };
 
 export const prependSlash = (url: string) => {
-    url = safeString(url);
-    return url.substr(0, 1) === '/'
-        ? url
-        : '/' + url;
+	url = safeString(url);
+	return url.substr(0, 1) === '/'
+		? url
+		: '/' + url;
 };
 
 
 //export const isError = (value: any): value is Error => value instanceof Error
 
 export function isArray<T>(value: any): value is Array<T> {
-    if(!value) return false;
-    return Array.isArray(value);
+	if(!value) return false;
+	return Array.isArray(value);
 }
 
 
@@ -931,12 +929,12 @@ export function isArray<T>(value: any): value is Array<T> {
  * @param {string} url
  * @return {string}
  */
- export function noTrailingSlash (url: any) {
-    url = safeString(url);
+export function noTrailingSlash (url: any) {
+	url = safeString(url);
 
-    return url.substr(-1) === '/'
-        ? url.substr(0, url.length - 1)
-        : url;
+	return url.substr(-1) === '/'
+		? url.substr(0, url.length - 1)
+		: url;
 }
 
 
@@ -945,12 +943,12 @@ export function isArray<T>(value: any): value is Array<T> {
  * @param {string} url
  * @return {string}
  */
- export function noPreSlash (url: any) {
-    url = safeString(url);
+export function noPreSlash (url: any) {
+	url = safeString(url);
 
-    return url.substr(0, 1) === '/'
-        ? url.substr(1, url.length)
-        : url;
+	return url.substr(0, 1) === '/'
+		? url.substr(1, url.length)
+		: url;
 }
 
 /**
@@ -958,8 +956,8 @@ export function isArray<T>(value: any): value is Array<T> {
  * @param {string} url
  * @return {string}
  */
- export function noWrappingSlash (url: any) {
-    return noPreSlash(noTrailingSlash(url));
+export function noWrappingSlash (url: any) {
+	return noPreSlash(noTrailingSlash(url));
 }
 
 
@@ -970,7 +968,7 @@ export function isArray<T>(value: any): value is Array<T> {
  * @returns {string[]}
  */
 export const urlToArray = (url: string): string[] => {
-    return noWrappingSlash(safeString(url)).split?.('/');
+	return noWrappingSlash(safeString(url)).split?.('/');
 };
 
 
@@ -980,8 +978,8 @@ export const urlToArray = (url: string): string[] => {
  * @return {string}
  */
 export const getSlug = (url: string) => {
-    const urlArray = safeString(noTrailingSlash(url)).split('/');
-    return urlArray.reverse()[0];
+	const urlArray = safeString(noTrailingSlash(url)).split('/');
+	return urlArray.reverse()[0];
 };
 
 
@@ -992,10 +990,10 @@ export const getSlug = (url: string) => {
  * @returns {string} Name of month.
  */
 export const getMonth = (rawDate: any, format: 'long' | 'short' = 'short', loc: genObject) => {
-    const months = loc.general.months[format];
-    const date = new Date(rawDate);
-    const month = date.getMonth();
-    return months[month];  
+	const months = loc.general.months[format];
+	const date = new Date(rawDate);
+	const month = date.getMonth();
+	return months[month];  
 };
 
 
@@ -1005,10 +1003,10 @@ export const getMonth = (rawDate: any, format: 'long' | 'short' = 'short', loc: 
  * @param {Function} action Function to process each item in array
  * @returns {any[]} Modified array
  */
-export function map<T = any>(arr: T[] = [], action: (item: T, index?: number) => any = (item) => item): T[] {
-    return safeArray<T>(arr).map((item, index) => {
-        return action(item, index);
-    });
+export function map<T = any>(arr: T[] = [], action: (item: T, index?: number) => any = (item) => item): any[] {
+	return safeArray(arr).map((item, index) => {
+		return action(item, index);
+	});
 }
 
 
@@ -1018,8 +1016,8 @@ export function map<T = any>(arr: T[] = [], action: (item: T, index?: number) =>
  * @param {Function} action Function to determine if item should be filtered out or not.
  * @returns {any[]} Filtered array
  */
- export function filter<T = any>(arr: T[] = [], action: (item: T) => boolean = () => false): T[] {
-    return safeArray(arr).filter((item) => action(item));
+export function filter<T = any>(arr: T[] = [], action: (item: T) => boolean = () => false): any[] {
+	return safeArray(arr).filter((item) => action(item));
 }
 
 
@@ -1029,8 +1027,8 @@ export function map<T = any>(arr: T[] = [], action: (item: T, index?: number) =>
  * @param {Function} action Function to find item.
  * @returns {any[]} Filtered array
  */
- export function find<T = any>(arr: T[] = [], action: (item: T) => boolean = () => false) {
-    return safeArray(arr).find((item) => action(item));
+export function find<T = any>(arr: T[] = [], action: (item: T) => boolean = () => false) {
+	return safeArray(arr).find((item) => action(item));
 }
 
 
@@ -1040,10 +1038,10 @@ export function map<T = any>(arr: T[] = [], action: (item: T, index?: number) =>
  * @param {Function} action Function to run on each item in array.
  * @returns {void} Executes passed function.
  */
- export function forEach<T = any>(arr: T[] = [], action: (item: T, index?: number) => void = (item) => item) {
-    safeArray(arr).forEach((item, index) => {
-        action(item, index);
-    });
+export function forEach<T = any>(arr: T[] = [], action: (item: T, index?: number) => any = (item) => item) {
+	safeArray(arr).forEach((item, index) => {
+		action(item, index);
+	});
 }
 
 
@@ -1053,8 +1051,8 @@ export function map<T = any>(arr: T[] = [], action: (item: T, index?: number) =>
  * @param {string} param Value to split string on. 
  * @returns {string[]} Returns splitted string.
  */
- export function split(value: string, param: string): string[] {
-    return safeString(value).split(param);
+export function split(value: string, param: string): string[] {
+	return safeString(value).split(param);
 }
 
 
@@ -1065,13 +1063,13 @@ export function map<T = any>(arr: T[] = [], action: (item: T, index?: number) =>
  * @param {genObject} source Object with properties to compare against.
  * @returns {boolean} Returns true if any properties in data don't matches same property in source.
  */
-export const hasChanges = (source: genObject, data: genObject, ) => {
-    let hasChanges = false;
-    if(!data || !source) return hasChanges;
+export const hasChanges = (source: genObject, data: genObject,) => {
+	let hasChanges = false;
+	if(!data || !source) return hasChanges;
 
-    forEach(Object.keys(data), (key) => {
-        if(data[key] !== source[key]) hasChanges = true;
-    });
+	forEach(Object.keys(data), (key) => {
+		if(data[key] !== source[key]) hasChanges = true;
+	});
 };
 
 
@@ -1082,16 +1080,16 @@ export const hasChanges = (source: genObject, data: genObject, ) => {
  * @returns {any[]} Array with duplicates removed
  */
 export const removeDuplicateArrayObjects = (array: any[], key: string) => {
-    const newArray: any[] = [];
-    const existingValues: any[] = [];
-    forEach(array, (item) => {
-        if(!existingValues.includes(item[key])) {
-            existingValues.push(item[key]);
-            newArray.push(item);
-        }
-    });
+	const newArray: any[] = [];
+	const existingValues: any[] = [];
+	forEach(array, (item) => {
+		if(!existingValues.includes(item[key])) {
+			existingValues.push(item[key]);
+			newArray.push(item);
+		}
+	});
 
-    return newArray;
+	return newArray;
 };
 
 
@@ -1102,23 +1100,23 @@ export const removeDuplicateArrayObjects = (array: any[], key: string) => {
  * @returns {string}
  */
 export const objToUrlParams = (queryObject: genObject) => {
-    let queryString = '';
-    if(!queryObject) return '';
-    if(typeof queryObject !== 'object' || isArray(queryObject)) return '';
+	let queryString = '';
+	if(!queryObject) return '';
+	if(typeof queryObject !== 'object' || isArray(queryObject)) return '';
 
-    const keys = Object.keys(queryObject);
+	const keys = Object.keys(queryObject);
     
-    forEach(keys, (key) => {
-        const operator = queryString ? '&' : '?';
-        const value = queryObject[key];
-        const type = typeof value;
+	forEach(keys, (key) => {
+		const operator = queryString ? '&' : '?';
+		const value = queryObject[key];
+		const type = typeof value;
 
-        if(['string', 'number'].includes(type)) {
-            queryString += operator + key + '=' + value;
-        }
-    });
+		if(['string', 'number'].includes(type)) {
+			queryString += operator + key + '=' + value;
+		}
+	});
 
-    return queryString;
+	return queryString;
 };
 
 
@@ -1129,7 +1127,7 @@ export const objToUrlParams = (queryObject: genObject) => {
  * @param {number} offset Number of items to offset array with
  * @returns {any[]} Returns an array with exactly as many items in it.
  */
- export const offsetArray = (arr: any, offset: number) => {
+export const offsetArray = (arr: any, offset: number) => {
 	const newArray: any = [];
 	const arrLength = arr.length;
 
@@ -1315,7 +1313,7 @@ export const jsonParse = (data: any) => {
  * @return {Promise<any>} A promise that resolves to an object with a result-property, 
  *  - or an error-property. If the result is undefined, and undefinedError-parameter is not defined, null is returned.
  */
- export const handlePromise = async (promise: Promise<any>, undefinedError?: string, target?: genObject) => {
+export const handlePromise = async (promise: Promise<any>, undefinedError?: string, target?: genObject) => {
 	//Check that passed value is a promise
 	if(!((promise || {}).then instanceof Function)) return Error('Passed value is not a promise.');
     
@@ -1342,7 +1340,7 @@ export const jsonParse = (data: any) => {
  * @param {Promise} promise Promise to be handled
  * @returns {Array} [result?, error?]
  */
- export const easyPromise = async (promise: Promise<any>) => {
+export const easyPromise = async (promise: Promise<any>) => {
 	const result = await handlePromise(promise, 'I promise nothing!!!');
 	if(isError(result)) return [undefined, result];
 	return [result];
